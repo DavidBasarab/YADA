@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{06ED661C-3045-4AEC-8246-5684F5B97847}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A5EAB1A0-8B24-4867-B13D-1741296A16DA}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YADA", "..\Projects\YADA\YADA.csproj", "{9FDD5BC1-E1A0-4DE5-860D-6479F490B80A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YADA.Acceptance", "..\Projects\YADA.Acceptance\YADA.Acceptance.csproj", "{52EABDC9-9965-4812-8CF9-7A7FE0659F0E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9FDD5BC1-E1A0-4DE5-860D-6479F490B80A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FDD5BC1-E1A0-4DE5-860D-6479F490B80A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FDD5BC1-E1A0-4DE5-860D-6479F490B80A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FDD5BC1-E1A0-4DE5-860D-6479F490B80A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52EABDC9-9965-4812-8CF9-7A7FE0659F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52EABDC9-9965-4812-8CF9-7A7FE0659F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52EABDC9-9965-4812-8CF9-7A7FE0659F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52EABDC9-9965-4812-8CF9-7A7FE0659F0E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{52EABDC9-9965-4812-8CF9-7A7FE0659F0E} = {06ED661C-3045-4AEC-8246-5684F5B97847}
+	EndGlobalSection
+EndGlobal
