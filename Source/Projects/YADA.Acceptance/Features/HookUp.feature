@@ -3,7 +3,6 @@
 	As a developer
 	I want to be able to 'hook up' with various resources
 
-@mytag
 Scenario: Connect to a database
 	Given I have a connection string configured
 	When I attempt to connect to the database
