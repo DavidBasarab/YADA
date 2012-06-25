@@ -66,20 +66,41 @@ namespace YADA.Acceptance.Features
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Run")]
+        [NUnit.Framework.DescriptionAttribute("Connect to a database")]
         [NUnit.Framework.CategoryAttribute("mytag")]
-        public virtual void Run()
+        public virtual void ConnectToADatabase()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Run", new string[] {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Connect to a database", new string[] {
                         "mytag"});
 #line 7
 this.ScenarioSetup(scenarioInfo);
 #line 8
- testRunner.Given("I want to run");
+ testRunner.Given("I have a connection string configured");
 #line 9
- testRunner.When("I run");
+ testRunner.When("I attempt to connect to the database");
 #line 10
- testRunner.Then("I have ran");
+ testRunner.Then("I can connect to the database");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Have rights to drop and create databases")]
+        public virtual void HaveRightsToDropAndCreateDatabases()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Have rights to drop and create databases", ((string[])(null)));
+#line 12
+this.ScenarioSetup(scenarioInfo);
+#line 13
+ testRunner.Given("I have a connection string configured");
+#line 14
+ testRunner.When("I attempt to create a database");
+#line 15
+ testRunner.And("I attempt to delete a database");
+#line 16
+ testRunner.Then("I can create the database");
+#line 17
+ testRunner.And("I can delete the database");
 #line hidden
             this.ScenarioCleanup();
         }
