@@ -1,8 +1,9 @@
 USE YadaTesting;
 GO
 
-INSERT INTO NarrowNoKeysSmallData
+INSERT INTO NarrowSmallData
 	(TestValue1, TestValue2)
 VALUES
 	('WhatIsOurTopic', 'RellectionAndTheBartletPyshcos'),
-	('FoldedPieceOfPaper', 'TheyAre Teaching Us something about ourselves')
+	('FoldedPieceOfPaper', 'They are Teaching Us something about ourselves'),
+	('DropOff', 'What time do you want to drop off the kids?')

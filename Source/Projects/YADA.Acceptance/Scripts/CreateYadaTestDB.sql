@@ -2,17 +2,17 @@ USE [master];
 GO
 
 IF (EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE ('[' + name + ']' = '[YadaTesting]' OR name = 'YadaTesting')))
-	BEGIN
+    BEGIN
 
-		ALTER DATABASE [YadaTesting]
+        ALTER DATABASE [YadaTesting]
 
-		SET SINGLE_USER
+        SET SINGLE_USER
 
-		WITH ROLLBACK IMMEDIATE
+        WITH ROLLBACK IMMEDIATE
 
-		DROP DATABASE [YadaTesting];
-		
-	END
+        DROP DATABASE [YadaTesting];
+        
+    END
 
 GO
 
@@ -20,8 +20,6 @@ USE [master];
 GO
 
 CREATE DATABASE [YadaTesting]
-
-
 GO
 
 ALTER DATABASE [YadaTesting] SET COMPATIBILITY_LEVEL = 100
@@ -121,10 +119,16 @@ GO
 USE [YadaTesting]
 GO
 
-ALTER TABLE [dbo].[NarrowNoKeysSmallData] DROP CONSTRAINT [DF_NarrowNoKeysSmallData_DateAdded]
-GO
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'	AND TABLE_NAME='[dbo].[NarrowSmallData]') 
+    BEGIN
+    
+        ALTER TABLE [dbo].[NarrowSmallData] DROP CONSTRAINT [DF_NarrowNoKeysSmallData_DateAdded]
+        
 
-DROP TABLE [dbo].[NarrowNoKeysSmallData]
+        DROP TABLE [dbo].[NarrowSmallData]
+    
+    END
+
 GO
 
 SET ANSI_NULLS ON
@@ -136,11 +140,11 @@ GO
 SET ANSI_PADDING ON
 GO
 
-CREATE TABLE [dbo].[NarrowNoKeysSmallData](
-	[TableKey] [int] IDENTITY(1,1) NOT NULL,
-	[TestValue1] [varchar](50) NOT NULL,
-	[TestValue2] [varchar](255) NOT NULL,
-	[DateAdded] [datetime] NOT NULL
+CREATE TABLE [dbo].[NarrowSmallData](
+    [TableKey] [int] IDENTITY(1,1) NOT NULL,
+    [TestValue1] [varchar](50) NOT NULL,
+    [TestValue2] [varchar](255) NOT NULL,
+    [DateAdded] [datetime] NOT NULL
 ) ON [PRIMARY]
 
 GO
@@ -148,7 +152,33 @@ GO
 SET ANSI_PADDING OFF
 GO
 
-ALTER TABLE [dbo].[NarrowNoKeysSmallData] ADD  CONSTRAINT [DF_NarrowNoKeysSmallData_DateAdded]  DEFAULT (getdate()) FOR [DateAdded]
+ALTER TABLE [dbo].[NarrowSmallData] ADD  CONSTRAINT [DF_NarrowNoKeysSmallData_DateAdded]  DEFAULT (getdate()) FOR [DateAdded]
+GO
+
+USE [YadaTesting]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[claims].[RCSelect]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [claims].[RCSelect]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[GetNarrowSmallDataByID]
+    @SmallDataID		INT
+AS 
+BEGIN
+    SELECT 
+        TableKey,
+        TestValue1,
+        TestValue2,
+        DateAdded	
+    FROM [dbo].[NarrowSmallData]
+END
 GO
 
 

@@ -57,22 +57,38 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>HookUp.feature</DependentUpon>
     </Compile>
+    <Compile Include="Features\SmallTableReading.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SmallTableReading.feature</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StepDefinations\BaseRunner.cs" />
     <Compile Include="StepDefinations\Hookup.cs" />
+    <Compile Include="StepDefinations\SmallTableReading.cs" />
+    <Content Include="Scripts\CreateYadaTestDB.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\RemoveYadaTestDB.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Features\HookUp.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>HookUp.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\SmallTableReading.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>SmallTableReading.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\CreateTest.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\CreateYadaTestDB.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\InsertData.sql">

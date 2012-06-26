@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.IO;
 using FluentAssertions;
 using TechTalk.SpecFlow;
 
 namespace YADA.Acceptance.StepDefinations
 {
     [Binding]
-    internal class Hookup
+    internal class Hookup : BaseRunner
     {
-        public bool Connected { get; set; }
-
-        public string ConnectionString
-        {
-            get { return ConfigurationManager.ConnectionStrings[0].ConnectionString; }
-        }
-
+        private bool Connected { get; set; }
+        
         private bool Created { get; set; }
         private bool Deleted { get; set; }
 
@@ -94,21 +88,6 @@ namespace YADA.Acceptance.StepDefinations
                 Deleted = false;
 
                 throw;
-            }
-        }
-
-        private void RunScriptAgainistDatabase(string scriptLocation)
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                var script = File.ReadAllText(scriptLocation);
-
-                using (var cmd = new SqlCommand(script, connection))
-                {
-                    connection.Open();
-                    cmd.ExecuteNonQuery();
-                    connection.Close();
-                }
             }
         }
     }
