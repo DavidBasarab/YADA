@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace YADA.Acceptance.StepDefinations.Values
 {
-    class NarrowSmallData
+    public class NarrowSmallData
     {
+        public int TableKey { get; set; }
+        public string TestValue1 { get; set; }
+        public string TestValue2 { get; set; }
+        public DateTime DateAdded { get; set; }
     }
 }

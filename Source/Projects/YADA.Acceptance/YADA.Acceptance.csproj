@@ -66,6 +66,7 @@
     <Compile Include="StepDefinations\BaseRunner.cs" />
     <Compile Include="StepDefinations\Hookup.cs" />
     <Compile Include="StepDefinations\SmallTableReading.cs" />
+    <Compile Include="StepDefinations\Values\NarrowSmallData.cs" />
     <Content Include="Scripts\CreateYadaTestDB.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -97,6 +98,12 @@
     <Content Include="Scripts\RemoveTest.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\YADA\YADA.csproj">
+      <Project>{9FDD5BC1-E1A0-4DE5-860D-6479F490B80A}</Project>
+      <Name>YADA</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
