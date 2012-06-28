@@ -20,6 +20,7 @@ namespace YADA.Acceptance.Features
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
     [NUnit.Framework.DescriptionAttribute("Hooking up to needed resources")]
+    [NUnit.Framework.IgnoreAttribute()]
     public partial class HookingUpToNeededResourcesFeature
     {
         
@@ -33,7 +34,8 @@ namespace YADA.Acceptance.Features
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Hooking up to needed resources", "In order to run these tests\r\nAs a developer\r\nI want to be able to \'hook up\' with " +
-                    "various resources", ProgrammingLanguage.CSharp, ((string[])(null)));
+                    "various resources", ProgrammingLanguage.CSharp, new string[] {
+                        "ignore"});
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -70,13 +72,13 @@ namespace YADA.Acceptance.Features
         public virtual void ConnectToADatabase()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Connect to a database", ((string[])(null)));
-#line 6
-this.ScenarioSetup(scenarioInfo);
 #line 7
- testRunner.Given("I have a connection string configured");
+this.ScenarioSetup(scenarioInfo);
 #line 8
- testRunner.When("I attempt to connect to the database");
+ testRunner.Given("I have a connection string configured");
 #line 9
+ testRunner.When("I attempt to connect to the database");
+#line 10
  testRunner.Then("I can connect to the database");
 #line hidden
             this.ScenarioCleanup();
@@ -87,17 +89,17 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void HaveRightsToDropAndCreateDatabases()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Have rights to drop and create databases", ((string[])(null)));
-#line 11
-this.ScenarioSetup(scenarioInfo);
 #line 12
- testRunner.Given("I have a connection string configured");
+this.ScenarioSetup(scenarioInfo);
 #line 13
- testRunner.When("I attempt to create a database");
+ testRunner.Given("I have a connection string configured");
 #line 14
- testRunner.And("I attempt to delete a database");
+ testRunner.When("I attempt to create a database");
 #line 15
- testRunner.Then("I can create the database");
+ testRunner.And("I attempt to delete a database");
 #line 16
+ testRunner.Then("I can create the database");
+#line 17
  testRunner.And("I can delete the database");
 #line hidden
             this.ScenarioCleanup();
