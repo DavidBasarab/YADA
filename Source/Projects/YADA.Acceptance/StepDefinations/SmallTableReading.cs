@@ -24,8 +24,7 @@ namespace YADA.Acceptance.StepDefinations
         {
             get
             {
-                return ExecutionTimes
-                    .Average();
+                return ExecutionTimes.Average();
             }
         }
 
@@ -68,7 +67,7 @@ namespace YADA.Acceptance.StepDefinations
 
                 var keyID = (i % 2) + 1;
 
-                var item = Database<NarrowSmallData>.GetRecord("YadaTesting.dbo.GetNarrowSmallDataByID", new Parameter("SmallDataID", keyID));
+                var item = Database<NarrowSmallData>.GetRecord("YadaTesting.dbo.GetNarrowSmallDataByID", Parameter.Create("SmallDataID", keyID));
 
                 stopWatch.Stop();
 
