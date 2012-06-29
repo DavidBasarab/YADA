@@ -178,6 +178,8 @@ BEGIN
         TestValue2,
         DateAdded	
     FROM [dbo].[NarrowSmallData]
+    WHERE
+            TableKey = @SmallDataID
 END
 GO
 

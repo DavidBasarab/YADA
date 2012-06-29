@@ -92,7 +92,7 @@ this.FeatureBackground();
 #line 13
     testRunner.When("using a store procedure to read a record");
 #line 14
-    testRunner.Then("the operation should happen in less than 1000 ms");
+    testRunner.Then("the operation should happen in less than 3 ms");
 #line hidden
             this.ScenarioCleanup();
         }

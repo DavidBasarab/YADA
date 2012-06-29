@@ -66,24 +66,43 @@ namespace YADA.Acceptance.StepDefinations
             {
                 var stopWatch = Stopwatch.StartNew();
 
-                var item = Reader<NarrowSmallData>.GetRecord("YadaTesting.dbo.GetNarrowSmallDataByID", 1);
+                var keyID = (i % 2) + 1;
+
+                var item = Database<NarrowSmallData>.GetRecord("YadaTesting.dbo.GetNarrowSmallDataByID", new Parameter("SmallDataID", keyID));
 
                 stopWatch.Stop();
 
                 ExecutionTime = stopWatch.Elapsed;
 
-                Console.WriteLine("Time for read {0} MS", ExecutionTime.Milliseconds);
-
                 ExecutionTimes.Add(ExecutionTime.Milliseconds);
+
+                switch (keyID)
+                {
+                    case 1:
+                        item.TableKey.Should().Be(1);
+                        item.TestValue1.Should().Be("WhatIsOurTopic");
+                        item.TestValue2.Should().Be("RellectionAndTheBartletPyshcos");
+                        item.DateAdded.Should().BeBefore(DateTime.Now);
+                        item.DateAdded.Should().BeAfter(DateTime.Now.AddDays(-1));
+                        break;
+                    case 2:
+                        item.TableKey.Should().Be(2);
+                        item.TestValue1.Should().Be("FoldedPieceOfPaper");
+                        item.TestValue2.Should().Be("They are Teaching Us something about ourselves");
+                        item.DateAdded.Should().BeBefore(DateTime.Now);
+                        item.DateAdded.Should().BeAfter(DateTime.Now.AddDays(-1));
+                        break;
+                    default:
+                        item.TableKey.Should().Be(3);
+                        item.TestValue1.Should().Be("DropOff");
+                        item.TestValue2.Should().Be("What time do you want to drop off the kids?");
+                        item.DateAdded.Should().BeBefore(DateTime.Now);
+                        item.DateAdded.Should().BeAfter(DateTime.Now.AddDays(-1));
+                        break;
+                }
             }
 
             Console.WriteLine("Average Read Time for read {0} MS", AverageExecutionTime);
-
-            //item.TableKey.Should().Be(1);
-            //item.TestValue1.Should().Be("WhatIsOurTopic");
-            //item.TestValue2.Should().Be("RellectionAndTheBartletPyshcos");
-            //item.DateAdded.Should().BeBefore(DateTime.Now);
-            //item.DateAdded.Should().BeAfter(DateTime.Now.AddDays(-1));
         }
     }
 }

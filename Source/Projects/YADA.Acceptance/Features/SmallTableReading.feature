@@ -11,4 +11,4 @@ Background:
 @database
 Scenario: I want to read 1 row
     When using a store procedure to read a record
-    Then the operation should happen in less than 1000 ms
+    Then the operation should happen in less than 3 ms

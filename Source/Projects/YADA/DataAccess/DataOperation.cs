@@ -6,15 +6,10 @@ namespace YADA.DataAccess
 {
     internal class DataOperation : IDisposable
     {
-        public static IDataReader RetrieveRecord(string storeProcedure, Parameter parameter)
-        {
-            return new DataOperation(storeProcedure, parameter).RetrieveRecord();
-        }
-
         protected SqlCommand _command;
         protected SqlConnection _conn;
 
-        private DataOperation(string storeProcedure, Parameter parameter)
+        public DataOperation(string storeProcedure, Parameter parameter)
         {
             CommandText = storeProcedure;
             Parameter = parameter;
@@ -26,6 +21,9 @@ namespace YADA.DataAccess
         public void Dispose()
         {
             if (_conn.State == ConnectionState.Open) _conn.Close();
+
+            _command.Dispose();
+            _conn.Dispose();
         }
 
         private SqlCommand CreateCommand()
@@ -41,7 +39,7 @@ namespace YADA.DataAccess
             return _conn = new SqlConnection(ConfigurationManager.ConnectionString);
         }
 
-        private IDataReader RetrieveRecord()
+        public IDataReader RetrieveRecord()
         {
             CreateConnection();
             using (CreateCommand())
@@ -51,8 +49,6 @@ namespace YADA.DataAccess
                 _conn.Open();
 
                 var reader = _command.ExecuteReader(CommandBehavior.SingleRow);
-
-                //_conn.Close();
 
                 return reader;
             }

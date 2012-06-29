@@ -43,10 +43,11 @@
   <ItemGroup>
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="DataAccess\DataOperation.cs" />
+    <Compile Include="DataAccess\YadaReader.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reader.cs" />
+    <Compile Include="DataBase.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
