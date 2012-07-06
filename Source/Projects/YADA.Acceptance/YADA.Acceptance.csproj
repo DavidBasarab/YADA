@@ -52,6 +52,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\NumberExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Features\HookUp.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

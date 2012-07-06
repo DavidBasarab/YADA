@@ -158,8 +158,8 @@ GO
 USE [YadaTesting]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[claims].[RCSelect]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [claims].[RCSelect]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetNarrowSmallDataByID]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetNarrowSmallDataByID]
 GO
 
 SET ANSI_NULLS ON
@@ -183,4 +183,58 @@ BEGIN
 END
 GO
 
+
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CreateSmallDataRow]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[CreateSmallDataRow]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[CreateSmallDataRow]
+    @TestValue1		VARCHAR(50),
+    @TestValue2		VARCHAR(255)
+AS 
+BEGIN
+    
+    INSERT INTO NarrowSmallData
+        (TestValue1, TestValue2)
+    VALUES
+        (@TestValue1, @TestValue2)
+
+END
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetRangeOfRecords]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetRangeOfRecords]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[GetRangeOfRecords]
+    @MinRecordID	INT		= 0,
+    @MaxRecordID	INT		= 15
+AS 
+BEGIN
+    
+    SELECT 
+        TableKey,
+        TestValue1,
+        TestValue2,
+        DateAdded	
+    FROM [dbo].[NarrowSmallData]
+    WHERE
+            TableKey >= @MinRecordID 
+        AND TableKey <= @MaxRecordID
+
+END
+GO
 

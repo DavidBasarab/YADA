@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -8,22 +9,70 @@ namespace YADA.DataAccess
     {
         protected SqlCommand _command;
         protected SqlConnection _conn;
+        private IEnumerable<Parameter> _parameters;
 
-        public DataOperation(string storeProcedure, Parameter parameter)
+        public DataOperation(string storeProcedure, IEnumerable<Parameter> parameters)
         {
             CommandText = storeProcedure;
-            Parameter = parameter;
+            Parameters = parameters;
         }
 
-        public string CommandText { get; set; }
-        public Parameter Parameter { get; set; }
+        private string CommandText { get; set; }
+
+        private IEnumerable<Parameter> Parameters
+        {
+            get { return _parameters ?? (_parameters = new List<Parameter>()); }
+            set { _parameters = value; }
+        }
 
         public void Dispose()
         {
-            if (_conn.State == ConnectionState.Open) _conn.Close();
+            if (_conn != null && _conn.State == ConnectionState.Open) _conn.Close();
 
-            _command.Dispose();
-            _conn.Dispose();
+            if (_command != null) _command.Dispose();
+            if (_conn != null) _conn.Dispose();
+        }
+
+        public void ExecuteNonQuery()
+        {
+            using (CreateConnection())
+            using (CreateCommand())
+            {
+                AddParameters();
+                OpenConnection();
+                _command.ExecuteNonQuery();
+                CloseConnection();
+            }
+        }
+
+        public IDataReader RetrieveRecord(CommandBehavior commandBehavior)
+        {
+            CreateConnection();
+            using (CreateCommand())
+            {
+                AddParameters();
+
+                OpenConnection();
+
+                var reader = _command.ExecuteReader(commandBehavior);
+
+                return reader;
+            }
+        }
+
+        private void AddParameters()
+        {
+            // Adding clear here, however I do not think I should be.  Find later why a clear is required.
+            foreach(var parameter in Parameters)
+            {
+                if (_command.Parameters.Contains(parameter.SqlParameter.ParameterName)) _command.Parameters[parameter.SqlParameter.ParameterName] = parameter.SqlParameter;
+                else _command.Parameters.Add(parameter.SqlParameter);
+            }
+        }
+
+        private void CloseConnection()
+        {
+            _conn.Close();
         }
 
         private SqlCommand CreateCommand()
@@ -36,22 +85,14 @@ namespace YADA.DataAccess
 
         private SqlConnection CreateConnection()
         {
-            return _conn = new SqlConnection(ConfigurationManager.ConnectionString);
+            _conn = new SqlConnection(ConfigurationManager.ConnectionString);
+
+            return _conn;
         }
 
-        public IDataReader RetrieveRecord()
+        private void OpenConnection()
         {
-            CreateConnection();
-            using (CreateCommand())
-            {
-                _command.Parameters.Add(Parameter.SqlParameter);
-
-                _conn.Open();
-
-                var reader = _command.ExecuteReader(CommandBehavior.SingleRow);
-
-                return reader;
-            }
+            _conn.Open();
         }
     }
 }

@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace YADA.DataAccess
 {
     internal class YadaReader : IDataReader
     {
-        public static IDataReader RetrieveRecord(string storeProcedure, Parameter parameter)
+        public static IDataReader RetrieveRecord(string storeProcedure, IEnumerable<Parameter> parameters, CommandBehavior commandBehavior = CommandBehavior.Default)
         {
-            return new YadaReader(storeProcedure, parameter).GetReader();
+            return new YadaReader(storeProcedure, parameters).GetReader(commandBehavior);
         }
 
-        private YadaReader(string storeProcedure, Parameter parameter)
+        private YadaReader(string storeProcedure, IEnumerable<Parameter> parameters)
         {
-            DataOperation = new DataOperation(storeProcedure, parameter);
+            DataOperation = new DataOperation(storeProcedure, parameters);
         }
 
         public YadaReader(IDataReader reader)
@@ -28,6 +29,9 @@ namespace YADA.DataAccess
         {
             Reader.Dispose();
             DataOperation.Dispose();
+
+            Reader = null;
+            DataOperation = null;
         }
 
         public string GetName(int i)
@@ -191,9 +195,9 @@ namespace YADA.DataAccess
             get { return Reader.RecordsAffected; }
         }
 
-        private YadaReader GetReader()
+        private YadaReader GetReader(CommandBehavior commandBehavior)
         {
-            Reader = DataOperation.RetrieveRecord();
+            Reader = DataOperation.RetrieveRecord(commandBehavior);
 
             return this;
         }

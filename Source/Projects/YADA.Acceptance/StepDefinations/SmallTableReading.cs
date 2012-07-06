@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using FluentAssertions;
 using TechTalk.SpecFlow;
+using YADA.Acceptance.Extensions;
 using YADA.Acceptance.StepDefinations.Values;
 
 namespace YADA.Acceptance.StepDefinations
@@ -22,10 +23,7 @@ namespace YADA.Acceptance.StepDefinations
 
         public double AverageExecutionTime
         {
-            get
-            {
-                return ExecutionTimes.Average();
-            }
+            get { return ExecutionTimes.Average(); }
         }
 
         [AfterScenario("database")]
@@ -52,6 +50,21 @@ namespace YADA.Acceptance.StepDefinations
             RunScriptAgainistDatabase(@"Scripts\InsertData.sql");
         }
 
+        [Given(@"I have small table populated with (.*) rows")]
+        public void GivenIHaveSmallTablePopulatedWithRows(int numberOfRows)
+        {
+            for (var i = 0; i < numberOfRows; i++)
+            {
+                var paramters = new[]
+                                {
+                                    Parameter.Create("TestValue1", StringExtensions.GetRandomString(47)),
+                                    Parameter.Create("TestValue2", StringExtensions.GetRandomString(247))
+                                };
+
+                Database.InsertRow("[YadaTesting].[dbo].[CreateSmallDataRow]", paramters);
+            }
+        }
+
         [Then(@"the operation should happen in less than (.*) ms")]
         public void ThenTheOperationShouldHappenInLessThanMS(int milliseconds)
         {
@@ -67,7 +80,7 @@ namespace YADA.Acceptance.StepDefinations
 
                 var keyID = (i % 2) + 1;
 
-                var item = Database<NarrowSmallData>.GetRecord("YadaTesting.dbo.GetNarrowSmallDataByID", Parameter.Create("SmallDataID", keyID));
+                var item = Database<NarrowSmallData>.GetRecord("YadaTesting.dbo.GetNarrowSmallDataByID", new[] { Parameter.Create("SmallDataID", keyID) });
 
                 stopWatch.Stop();
 
@@ -99,6 +112,33 @@ namespace YADA.Acceptance.StepDefinations
                         item.DateAdded.Should().BeAfter(DateTime.Now.AddDays(-1));
                         break;
                 }
+            }
+
+            Console.WriteLine("Average Read Time for read {0} MS", AverageExecutionTime);
+        }
+
+        [When(@"using a store procedure to read in (.*) records")]
+        public void WhenUsingAStoreProcedureToReadInRecords(int numberOfRecords)
+        {
+            for (var i = 0; i < 50; i++)
+            {
+                var parameters = new[]
+                             {
+                                 Parameter.Create("MinRecordID", 1),
+                                 Parameter.Create("MaxRecordID", numberOfRecords)
+                             };
+
+                var stopwatch = Stopwatch.StartNew();
+
+                var items = Database<NarrowSmallData>.GetRecords("[YadaTesting].[dbo].[GetRangeOfRecords]", parameters);
+
+                stopwatch.Stop();
+
+                ExecutionTime = stopwatch.Elapsed;
+
+                ExecutionTimes.Add(ExecutionTime.Milliseconds);
+
+                items.Count.Should().Be(numberOfRecords);
             }
 
             Console.WriteLine("Average Read Time for read {0} MS", AverageExecutionTime);
