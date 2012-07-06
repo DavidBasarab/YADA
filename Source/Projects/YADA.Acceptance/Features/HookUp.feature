@@ -1,5 +1,4 @@
-﻿@ignore
-Feature: Hooking up to needed resources
+﻿Feature: Hooking up to needed resources
 	In order to run these tests
 	As a developer
 	I want to be able to 'hook up' with various resources

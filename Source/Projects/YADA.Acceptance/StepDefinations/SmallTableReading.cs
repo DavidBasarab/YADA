@@ -26,6 +26,8 @@ namespace YADA.Acceptance.StepDefinations
             get { return ExecutionTimes.Average(); }
         }
 
+        private int NumberOfInsertedRows { get; set; }
+
         [AfterScenario("database")]
         public void CleanUp()
         {
@@ -56,13 +58,15 @@ namespace YADA.Acceptance.StepDefinations
             for (var i = 0; i < numberOfRows; i++)
             {
                 var paramters = new[]
-                                {
-                                    Parameter.Create("TestValue1", StringExtensions.GetRandomString(47)),
-                                    Parameter.Create("TestValue2", StringExtensions.GetRandomString(247))
-                                };
+                    {
+                        Parameter.Create("TestValue1", StringExtensions.GetRandomString(47)),
+                        Parameter.Create("TestValue2", StringExtensions.GetRandomString(247))
+                    };
 
                 Database.InsertRow("[YadaTesting].[dbo].[CreateSmallDataRow]", paramters);
             }
+
+            NumberOfInsertedRows = numberOfRows;
         }
 
         [Then(@"the operation should happen in less than (.*) ms")]
@@ -122,11 +126,13 @@ namespace YADA.Acceptance.StepDefinations
         {
             for (var i = 0; i < 50; i++)
             {
+                var startRecordID = NumberExtensions.NextRandom(1, NumberOfInsertedRows - numberOfRecords - 1);
+
                 var parameters = new[]
-                             {
-                                 Parameter.Create("MinRecordID", 1),
-                                 Parameter.Create("MaxRecordID", numberOfRecords)
-                             };
+                    {
+                        Parameter.Create("MinRecordID", startRecordID),
+                        Parameter.Create("MaxRecordID", startRecordID + numberOfRecords)
+                    };
 
                 var stopwatch = Stopwatch.StartNew();
 
