@@ -131,7 +131,7 @@ namespace YADA.Acceptance.StepDefinations
                 var parameters = new[]
                     {
                         Parameter.Create("MinRecordID", startRecordID),
-                        Parameter.Create("MaxRecordID", startRecordID + numberOfRecords)
+                        Parameter.Create("MaxRecordID", startRecordID + numberOfRecords - 1)
                     };
 
                 var stopwatch = Stopwatch.StartNew();
