@@ -10,7 +10,7 @@ namespace YADA
         {
             TEntity newObject;
 
-            using (var reader = YadaReader.RetrieveRecord(procedureName, parameters, CommandBehavior.SingleRow))
+            using (var reader = ADOReader.RetrieveRecord(procedureName, parameters, CommandBehavior.SingleRow))
             {
                 reader.Read();
 
@@ -26,7 +26,7 @@ namespace YADA
         {
             var records = new List<TEntity>();
 
-            using (var reader = YadaReader.RetrieveRecord(procedure, parameters))
+            using (var reader = ADOReader.RetrieveRecord(procedure, parameters))
             {
                 while (reader.Read()) records.Add(CreateFromReader(reader));
 

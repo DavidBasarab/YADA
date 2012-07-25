@@ -4,19 +4,24 @@ using System.Data;
 
 namespace YADA.DataAccess
 {
-    internal class YadaReader : IDataReader
+    internal interface YADAReader
+    {
+        IDataReader RetrieveRecord(string storeProcedure, IEnumerable<Parameter> parameters, CommandBehavior commandBehavior = CommandBehavior.Default);
+    }
+
+    internal class ADOReader : IDataReader
     {
         public static IDataReader RetrieveRecord(string storeProcedure, IEnumerable<Parameter> parameters, CommandBehavior commandBehavior = CommandBehavior.Default)
         {
-            return new YadaReader(storeProcedure, parameters).GetReader(commandBehavior);
+            return new ADOReader(storeProcedure, parameters).GetReader(commandBehavior);
         }
 
-        private YadaReader(string storeProcedure, IEnumerable<Parameter> parameters)
+        private ADOReader(string storeProcedure, IEnumerable<Parameter> parameters)
         {
             DataOperation = new DataOperation(storeProcedure, parameters);
         }
 
-        public YadaReader(IDataReader reader)
+        public ADOReader(IDataReader reader)
         {
             Reader = reader;
         }
@@ -195,7 +200,7 @@ namespace YADA.DataAccess
             get { return Reader.RecordsAffected; }
         }
 
-        private YadaReader GetReader(CommandBehavior commandBehavior)
+        private ADOReader GetReader(CommandBehavior commandBehavior)
         {
             Reader = DataOperation.RetrieveRecord(commandBehavior);
 

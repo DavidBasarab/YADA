@@ -10,6 +10,16 @@ namespace YADA
             return new Parameter(name, value, parameterDirection);
         }
 
+        public static bool operator ==(Parameter rhs, Parameter lhs)
+        {
+            return ReferenceEquals(rhs, null) ? ReferenceEquals(lhs, null) : rhs.Equals(lhs);
+        }
+
+        public static bool operator !=(Parameter rhs, Parameter lhs)
+        {
+            return !(rhs == lhs);
+        }
+
         private ParameterDirection _direction;
 
         private string _name;
@@ -50,6 +60,25 @@ namespace YADA
         public object SqlValue
         {
             get { return SqlParameter.Value; }
+        }
+
+        public override bool Equals(object obj)
+        {
+            var otherObj = obj as Parameter;
+
+            return otherObj != null && Name == otherObj.Name && AreSqlValuesEqual(otherObj);
+        }
+
+        public override int GetHashCode()
+        {
+            var smash = string.Format("{0}{1}", Name, SqlValue);
+
+            return smash.GetHashCode();
+        }
+
+        private bool AreSqlValuesEqual(Parameter otherObj)
+        {
+            return ReferenceEquals(SqlValue, null) ? ReferenceEquals(otherObj.SqlValue, null) : SqlValue.Equals(otherObj.SqlValue);
         }
 
         private SqlParameter CreateSqlParameter()
