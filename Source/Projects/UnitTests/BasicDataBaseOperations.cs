@@ -7,6 +7,10 @@ namespace UnitTests
     [Category("Basic_DataBase_Operations")]
     public class BasicDataBaseOperations
     {
-       
+        //[Test]
+        //public void GetRecordReturnsAnEntity()
+        //{
+        //    Assert.Fail();
+        //}
     }
 }

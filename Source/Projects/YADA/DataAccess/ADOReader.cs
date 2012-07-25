@@ -16,7 +16,7 @@ namespace YADA.DataAccess
             return new ADOReader(storeProcedure, parameters).GetReader(commandBehavior);
         }
 
-        private ADOReader(string storeProcedure, IEnumerable<Parameter> parameters)
+        public ADOReader(string storeProcedure, IEnumerable<Parameter> parameters)
         {
             DataOperation = new DataOperation(storeProcedure, parameters);
         }
