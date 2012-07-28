@@ -4,9 +4,17 @@ using System.Data;
 
 namespace YADA.DataAccess
 {
-    internal interface YADAReader
+    internal interface Reader
     {
         IDataReader RetrieveRecord(string storeProcedure, IEnumerable<Parameter> parameters, CommandBehavior commandBehavior = CommandBehavior.Default);
+    }
+
+    internal class YadaReader : Reader
+    {
+        public IDataReader RetrieveRecord(string storeProcedure, IEnumerable<Parameter> parameters, CommandBehavior commandBehavior = CommandBehavior.Default)
+        {
+            throw new NotImplementedException("Just here for now until I am ready to implement");
+        }
     }
 
     internal class ADOReader : IDataReader

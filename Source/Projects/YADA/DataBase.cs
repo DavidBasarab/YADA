@@ -4,17 +4,26 @@ using YADA.DataAccess;
 
 namespace YADA
 {
-    public class Database<TEntity> where TEntity : new()
+    public class Database
     {
-        public static TEntity GetRecord(string procedureName, IEnumerable<Parameter> parameters = null)
+        public Database() {}
+
+        internal Database(Reader reader)
+        {
+            Reader = reader;
+        }
+
+        private Reader Reader { get; set; }
+
+        public TEntity GetRecord<TEntity>(string procedureName, IEnumerable<Parameter> parameters = null) where TEntity : new()
         {
             TEntity newObject;
 
-            using (var reader = ADOReader.RetrieveRecord(procedureName, parameters, CommandBehavior.SingleRow))
+            using (var reader = Reader.RetrieveRecord(procedureName, parameters, CommandBehavior.SingleRow))
             {
                 reader.Read();
 
-                newObject = CreateFromReader(reader);
+                newObject = CreateFromReader<TEntity>(reader);
 
                 reader.Close();
             }
@@ -22,13 +31,13 @@ namespace YADA
             return newObject;
         }
 
-        public static IList<TEntity> GetRecords(string procedure, IEnumerable<Parameter> parameters = null)
+        public IList<TEntity> GetRecords<TEntity>(string procedure, IEnumerable<Parameter> parameters = null) where TEntity : new()
         {
             var records = new List<TEntity>();
 
             using (var reader = ADOReader.RetrieveRecord(procedure, parameters))
             {
-                while (reader.Read()) records.Add(CreateFromReader(reader));
+                while (reader.Read()) records.Add(CreateFromReader<TEntity>(reader));
 
                 reader.Close();
             }
@@ -36,7 +45,14 @@ namespace YADA
             return records;
         }
 
-        private static TEntity CreateFromReader(IDataRecord reader)
+        public void InsertRow(string procedureName, IEnumerable<Parameter> parameters)
+        {
+            var dataOperation = new DataOperation(procedureName, parameters);
+
+            dataOperation.ExecuteNonQuery();
+        }
+
+        private TEntity CreateFromReader<TEntity>(IDataRecord reader) where TEntity : new()
         {
             var newObject = new TEntity();
 
@@ -50,16 +66,6 @@ namespace YADA
             }
 
             return newObject;
-        }
-    }
-
-    public class Database
-    {
-        public static void InsertRow(string procedureName, IEnumerable<Parameter> parameters)
-        {
-            var dataOperation = new DataOperation(procedureName, parameters);
-
-            dataOperation.ExecuteNonQuery();
         }
     }
 }
