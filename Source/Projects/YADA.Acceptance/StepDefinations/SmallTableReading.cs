@@ -55,15 +55,17 @@ namespace YADA.Acceptance.StepDefinations
         [Given(@"I have small table populated with (.*) rows")]
         public void GivenIHaveSmallTablePopulatedWithRows(int numberOfRows)
         {
+            var database = Database.Instance;
+
             for (var i = 0; i < numberOfRows; i++)
             {
                 var paramters = new[]
-                    {
-                        Parameter.Create("TestValue1", StringExtensions.GetRandomString(47)),
-                        Parameter.Create("TestValue2", StringExtensions.GetRandomString(247))
-                    };
+                                {
+                                    Parameter.Create("TestValue1", StringExtensions.GetRandomString(47)),
+                                    Parameter.Create("TestValue2", StringExtensions.GetRandomString(247))
+                                };
 
-                Database.InsertRow("[YadaTesting].[dbo].[CreateSmallDataRow]", paramters);
+                database.InsertRow("[YadaTesting].[dbo].[CreateSmallDataRow]", paramters);
             }
 
             NumberOfInsertedRows = numberOfRows;
@@ -78,13 +80,15 @@ namespace YADA.Acceptance.StepDefinations
         [When(@"using a store procedure to read a record")]
         public void WhenUsingAStoreProcedureToReadARecord()
         {
+            var database = Database.Instance;
+
             for (var i = 0; i < 100; i++)
             {
                 var stopWatch = Stopwatch.StartNew();
 
                 var keyID = (i % 2) + 1;
 
-                var item = Database<NarrowSmallData>.GetRecord("YadaTesting.dbo.GetNarrowSmallDataByID", new[] { Parameter.Create("SmallDataID", keyID) });
+                var item = database.GetRecord<NarrowSmallData>("YadaTesting.dbo.GetNarrowSmallDataByID", new[] { Parameter.Create("SmallDataID", keyID) });
 
                 stopWatch.Stop();
 
@@ -124,19 +128,21 @@ namespace YADA.Acceptance.StepDefinations
         [When(@"using a store procedure to read in (.*) records")]
         public void WhenUsingAStoreProcedureToReadInRecords(int numberOfRecords)
         {
+            var database = Database.Instance;
+
             for (var i = 0; i < 50; i++)
             {
                 var startRecordID = NumberExtensions.NextRandom(1, NumberOfInsertedRows - numberOfRecords - 1);
 
                 var parameters = new[]
-                    {
-                        Parameter.Create("MinRecordID", startRecordID),
-                        Parameter.Create("MaxRecordID", startRecordID + numberOfRecords - 1)
-                    };
+                                 {
+                                     Parameter.Create("MinRecordID", startRecordID),
+                                     Parameter.Create("MaxRecordID", startRecordID + numberOfRecords - 1)
+                                 };
 
                 var stopwatch = Stopwatch.StartNew();
 
-                var items = Database<NarrowSmallData>.GetRecords("[YadaTesting].[dbo].[GetRangeOfRecords]", parameters);
+                var items = database.GetRecords<NarrowSmallData>("[YadaTesting].[dbo].[GetRangeOfRecords]", parameters);
 
                 stopwatch.Stop();
 

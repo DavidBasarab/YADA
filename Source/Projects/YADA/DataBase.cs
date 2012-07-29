@@ -6,14 +6,24 @@ namespace YADA
 {
     public class Database
     {
+        public static Database Instance
+        {
+            get { return Nested.Instance; }
+        }
+
+        private Reader _reader;
+
         public Database() {}
 
         internal Database(Reader reader)
         {
-            Reader = reader;
+            _reader = reader;
         }
 
-        private Reader Reader { get; set; }
+        private Reader Reader
+        {
+            get { return _reader ?? (_reader = new YadaReader()); }
+        }
 
         public TEntity GetRecord<TEntity>(string procedureName, IEnumerable<Parameter> parameters = null) where TEntity : new()
         {
@@ -66,6 +76,16 @@ namespace YADA
             }
 
             return newObject;
+        }
+
+        private class Nested
+        {
+            internal static readonly Database Instance;
+
+            static Nested()
+            {
+                Instance = new Database();
+            }
         }
     }
 }

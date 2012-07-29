@@ -13,7 +13,7 @@ namespace YADA.DataAccess
     {
         public IDataReader RetrieveRecord(string storeProcedure, IEnumerable<Parameter> parameters, CommandBehavior commandBehavior = CommandBehavior.Default)
         {
-            throw new NotImplementedException("Just here for now until I am ready to implement");
+            return ADOReader.RetrieveRecord(storeProcedure, parameters, commandBehavior);
         }
     }
 

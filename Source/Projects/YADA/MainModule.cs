@@ -7,7 +7,8 @@ namespace YADA
     {
         public override void Load()
         {
-            Bind<Reader>().To<YadaReader>();
+            Kernel.Bind<Reader>().To<YadaReader>();
+            Kernel.Bind<Database>().ToSelf();
         }
     }
 }
