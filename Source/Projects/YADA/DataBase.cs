@@ -35,7 +35,7 @@ namespace YADA
         {
             var records = new List<TEntity>();
 
-            using (var reader = ADOReader.RetrieveRecord(procedure, parameters))
+            using (var reader = Reader.RetrieveRecord(procedure, parameters))
             {
                 while (reader.Read()) records.Add(CreateFromReader<TEntity>(reader));
 
