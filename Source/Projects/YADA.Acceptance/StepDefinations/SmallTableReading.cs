@@ -9,6 +9,9 @@ using YADA.Acceptance.StepDefinations.Values;
 
 namespace YADA.Acceptance.StepDefinations
 {
+    // Found store procedures at 
+    // http://www.tools4sql.net/T4S_Stored_Procedure_Generator/SampleSP/AdventureWorks/All%20SP/AdventureWorks.txt
+
     [Binding]
     internal class SmallTableReading : BaseRunner
     {

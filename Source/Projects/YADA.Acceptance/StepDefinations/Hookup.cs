@@ -9,10 +9,25 @@ namespace YADA.Acceptance.StepDefinations
     [Binding]
     internal class Hookup : BaseRunner
     {
+        private static void WriteErrorToConsole(Exception exception, int tabNumber = 0)
+        {
+            var spaces = new string(' ', tabNumber * 4);
+
+            Console.WriteLine("");
+            Console.WriteLine("{0}{1} EXCEPTION {1}", spaces, new string('=', 30));
+            Console.WriteLine("");
+            Console.WriteLine("{0}    MESSAGE    : {1}", spaces, exception.Message);
+
+            Console.WriteLine("{0}    STACKTRACE : {1}", spaces,
+                              exception.StackTrace.Replace(Environment.NewLine, string.Format("{1}{0}", new string(' ', (tabNumber * 4) + 16), Environment.NewLine)));
+
+            Console.WriteLine("{0}{1}", spaces, new string('-', 71));
+
+            if (exception.InnerException != null) WriteErrorToConsole(exception, tabNumber + 1);
+        }
+
         private bool Connected { get; set; }
-        
-        private bool Created { get; set; }
-        private bool Deleted { get; set; }
+        private bool ReadAdventureWorksDatabase { get; set; }
 
         [Given(@"I have a connection string configured")]
         public void GivenIHaveAConnectionStringConfigured()
@@ -26,16 +41,10 @@ namespace YADA.Acceptance.StepDefinations
             Connected.Should().BeTrue();
         }
 
-        [Then(@"I can create the database")]
-        public void ThenICanCreateTheDatabase()
+        [Then(@"I can get results from the database")]
+        public void ThenICanGetResultsFromTheDatabase()
         {
-            Created.Should().BeTrue();
-        }
-
-        [Then(@"I can delete the database")]
-        public void ThenICanDeleteTheDatabase()
-        {
-            Deleted.Should().BeTrue();
+            ReadAdventureWorksDatabase.Should().BeTrue();
         }
 
         [When(@"I attempt to connect to the database")]
@@ -51,43 +60,40 @@ namespace YADA.Acceptance.StepDefinations
 
                 Connected = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Connected = false;
+
+                WriteErrorToConsole(ex);
             }
         }
 
-        [When(@"I attempt to create a database")]
-        public void WhenIAttemptToCreateADatabase()
+        [When(@"I attempt to read from an adventure works table")]
+        public void WhenIAttemptToReadFromAnAdventureWorksTable()
         {
             try
             {
-                RunScriptAgainistDatabase(@"Scripts\CreateTest.sql");
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    const string commandText = @"SELECT COUNT(1) FROM [HumanResources].[Department]";
 
-                Created = true;
+                    using (var command = new SqlCommand(commandText, connection))
+                    {
+                        connection.Open();
+                        var scalarValue = command.ExecuteScalar();
+                        connection.Close();
+
+                        ((int)(scalarValue)).Should().Be(16);
+                    }
+                }
+
+                ReadAdventureWorksDatabase = true;
             }
-            catch
+            catch (Exception ex)
             {
-                Created = false;
+                ReadAdventureWorksDatabase = false;
 
-                throw;
-            }
-        }
-
-        [When(@"I attempt to delete a database")]
-        public void WhenIAttemptToDeleteADatabase()
-        {
-            try
-            {
-                RunScriptAgainistDatabase(@"Scripts\RemoveTest.sql");
-
-                Deleted = true;
-            }
-            catch
-            {
-                Deleted = false;
-
-                throw;
+                WriteErrorToConsole(ex);
             }
         }
     }

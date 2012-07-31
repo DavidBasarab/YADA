@@ -69,12 +69,6 @@
     <Compile Include="StepDefinations\Hookup.cs" />
     <Compile Include="StepDefinations\SmallTableReading.cs" />
     <Compile Include="StepDefinations\Values\NarrowSmallData.cs" />
-    <Content Include="Scripts\CreateYadaTestDB.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\RemoveYadaTestDB.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -89,17 +83,6 @@
       <LastGenOutput>SmallTableReading.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\CreateTest.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\InsertData.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\RemoveTest.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\YADA\YADA.csproj">
