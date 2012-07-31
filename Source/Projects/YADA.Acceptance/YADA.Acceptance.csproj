@@ -65,6 +65,11 @@
       <DependentUpon>SmallTableReading.feature</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="StepDefinations\BaseRunner.cs" />
     <Compile Include="StepDefinations\Hookup.cs" />
     <Compile Include="StepDefinations\SmallTableReading.cs" />
@@ -83,6 +88,10 @@
       <LastGenOutput>SmallTableReading.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\YADA\YADA.csproj">
