@@ -71,9 +71,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="StepDefinations\BaseRunner.cs" />
+    <Compile Include="StepDefinations\Helpers.cs" />
     <Compile Include="StepDefinations\Hookup.cs" />
     <Compile Include="StepDefinations\SmallTableReading.cs" />
     <Compile Include="StepDefinations\Values\NarrowSmallData.cs" />
+    <Compile Include="StepDefinations\Values\Vendor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

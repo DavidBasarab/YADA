@@ -9,9 +9,6 @@ using YADA.Acceptance.StepDefinations.Values;
 
 namespace YADA.Acceptance.StepDefinations
 {
-    // Found store procedures at 
-    // http://www.tools4sql.net/T4S_Stored_Procedure_Generator/SampleSP/AdventureWorks/All%20SP/AdventureWorks.txt
-
     [Binding]
     internal class SmallTableReading : BaseRunner
     {
@@ -31,47 +28,12 @@ namespace YADA.Acceptance.StepDefinations
 
         private int NumberOfInsertedRows { get; set; }
 
-        [AfterScenario("database")]
-        public void CleanUp()
+        [Given(@"I can connect to AdventureWorks database")]
+        public void GivenICanConnectToAdventureWorksDatabase()
         {
-            RunScriptAgainistDatabase(@"Scripts\RemoveYadaTestDB.sql");
-        }
+            var testResult = Helpers.WhenIAttemptToConnectToTheDatabase();
 
-        [Given(@"I have a test database created")]
-        public void GivenIHaveATestDatabaseCreated()
-        {
-            RunScriptAgainistDatabase(@"Scripts\CreateYadaTestDB.sql");
-        }
-
-        [Given(@"I have small table created")]
-        public void GivenIHaveSmallTableCreated()
-        {
-            // Done in previous step
-        }
-
-        [Given(@"I have small table populated")]
-        public void GivenIHaveSmallTablePopulated()
-        {
-            RunScriptAgainistDatabase(@"Scripts\InsertData.sql");
-        }
-
-        [Given(@"I have small table populated with (.*) rows")]
-        public void GivenIHaveSmallTablePopulatedWithRows(int numberOfRows)
-        {
-            var database = Database.Instance;
-
-            for (var i = 0; i < numberOfRows; i++)
-            {
-                var paramters = new[]
-                                {
-                                    Parameter.Create("TestValue1", StringExtensions.GetRandomString(47)),
-                                    Parameter.Create("TestValue2", StringExtensions.GetRandomString(247))
-                                };
-
-                database.InsertRow("[YadaTesting].[dbo].[CreateSmallDataRow]", paramters);
-            }
-
-            NumberOfInsertedRows = numberOfRows;
+            testResult.Should().BeTrue();
         }
 
         [Then(@"the operation should happen in less than (.*) ms")]
@@ -85,13 +47,20 @@ namespace YADA.Acceptance.StepDefinations
         {
             var database = Database.Instance;
 
+            var vendorIDs = new[]
+                            {
+                                1500,
+                                1502,
+                                1504
+                            };
+
             for (var i = 0; i < 100; i++)
             {
                 var stopWatch = Stopwatch.StartNew();
 
-                var keyID = (i % 2) + 1;
+                var keyID = (i % 3);
 
-                var item = database.GetRecord<NarrowSmallData>("YadaTesting.dbo.GetNarrowSmallDataByID", new[] { Parameter.Create("SmallDataID", keyID) });
+                var item = database.GetRecord<Vendor>("Purchasing.GetVendorByVendorID", new[] { Parameter.Create("BusinessEntityID", vendorIDs[keyID]) });
 
                 stopWatch.Stop();
 
@@ -101,26 +70,35 @@ namespace YADA.Acceptance.StepDefinations
 
                 switch (keyID)
                 {
-                    case 1:
-                        item.TableKey.Should().Be(1);
-                        item.TestValue1.Should().Be("WhatIsOurTopic");
-                        item.TestValue2.Should().Be("RellectionAndTheBartletPyshcos");
-                        item.DateAdded.Should().BeBefore(DateTime.Now);
-                        item.DateAdded.Should().BeAfter(DateTime.Now.AddDays(-1));
+                    case 0:
+                        item.BusinessEntityID.Should().Be(1500);
+                        item.AccountNumber.Should().Be("MORGANB0001");
+                        item.Name.Should().Be("Morgan Bike Accessories");
+                        item.CreditRating.Should().Be(1);
+                        item.PreferredVendorStatus.Should().BeTrue();
+                        item.ActiveFlag.Should().BeTrue();
+                        item.PurchasingWebServiceURL.Should().BeNullOrEmpty();
+                        item.ModifiedDate.Should().Be(DateTime.Parse("2006-03-05"));
                         break;
-                    case 2:
-                        item.TableKey.Should().Be(2);
-                        item.TestValue1.Should().Be("FoldedPieceOfPaper");
-                        item.TestValue2.Should().Be("They are Teaching Us something about ourselves");
-                        item.DateAdded.Should().BeBefore(DateTime.Now);
-                        item.DateAdded.Should().BeAfter(DateTime.Now.AddDays(-1));
+                    case 1:
+                        item.BusinessEntityID.Should().Be(1502);
+                        item.AccountNumber.Should().Be("CYCLING0001");
+                        item.Name.Should().Be("Cycling Master");
+                        item.CreditRating.Should().Be(1);
+                        item.PreferredVendorStatus.Should().BeTrue();
+                        item.ActiveFlag.Should().BeTrue();
+                        item.PurchasingWebServiceURL.Should().BeNullOrEmpty();
+                        item.ModifiedDate.Should().Be(DateTime.Parse("2006-01-24"));
                         break;
                     default:
-                        item.TableKey.Should().Be(3);
-                        item.TestValue1.Should().Be("DropOff");
-                        item.TestValue2.Should().Be("What time do you want to drop off the kids?");
-                        item.DateAdded.Should().BeBefore(DateTime.Now);
-                        item.DateAdded.Should().BeAfter(DateTime.Now.AddDays(-1));
+                        item.BusinessEntityID.Should().Be(1504);
+                        item.AccountNumber.Should().Be("CHICAGO0002");
+                        item.Name.Should().Be("Chicago Rent-All");
+                        item.CreditRating.Should().Be(2);
+                        item.PreferredVendorStatus.Should().BeTrue();
+                        item.ActiveFlag.Should().BeTrue();
+                        item.PurchasingWebServiceURL.Should().BeNullOrEmpty();
+                        item.ModifiedDate.Should().Be(DateTime.Parse("2006-01-24"));
                         break;
                 }
             }

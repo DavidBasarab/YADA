@@ -10,23 +10,6 @@ namespace YADA.Acceptance.StepDefinations
     [Binding]
     internal class Hookup : BaseRunner
     {
-        private static void WriteErrorToConsole(Exception exception, int tabNumber = 0)
-        {
-            var spaces = new string(' ', tabNumber * 4);
-
-            Console.WriteLine("");
-            Console.WriteLine("{0}{1} EXCEPTION {1}", spaces, new string('=', 30));
-            Console.WriteLine("");
-            Console.WriteLine("{0}    MESSAGE    : {1}", spaces, exception.Message);
-
-            Console.WriteLine("{0}    STACKTRACE : {1}", spaces,
-                              exception.StackTrace.Replace(Environment.NewLine, string.Format("{1}{0}", new string(' ', (tabNumber * 4) + 16), Environment.NewLine)));
-
-            Console.WriteLine("{0}{1}", spaces, new string('-', 71));
-
-            if (exception.InnerException != null) WriteErrorToConsole(exception, tabNumber + 1);
-        }
-
         private bool Connected { get; set; }
         private bool ReadAdventureWorksDatabase { get; set; }
         private bool ProcedureRecordsReturned { get; set; }
@@ -58,22 +41,7 @@ namespace YADA.Acceptance.StepDefinations
         [When(@"I attempt to connect to the database")]
         public void WhenIAttemptToConnectToTheDatabase()
         {
-            try
-            {
-                var connection = new SqlConnection(ConnectionString);
-
-                connection.Open();
-                connection.Close();
-                connection.Dispose();
-
-                Connected = true;
-            }
-            catch (Exception ex)
-            {
-                Connected = false;
-
-                WriteErrorToConsole(ex);
-            }
+            Connected = Helpers.WhenIAttemptToConnectToTheDatabase();
         }
 
         [When(@"I attempt to read from an adventure works table")]
@@ -101,7 +69,7 @@ namespace YADA.Acceptance.StepDefinations
             {
                 ReadAdventureWorksDatabase = false;
 
-                WriteErrorToConsole(ex);
+                Helpers.WriteErrorToConsole(ex);
             }
         }
 
@@ -134,7 +102,7 @@ namespace YADA.Acceptance.StepDefinations
             {
                 ProcedureRecordsReturned = false;
 
-                WriteErrorToConsole(ex);
+                Helpers.WriteErrorToConsole(ex);
             }
         }
     }

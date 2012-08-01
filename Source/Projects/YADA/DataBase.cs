@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using YADA.DataAccess;
 
@@ -71,6 +72,8 @@ namespace YADA
             foreach(var propertyInfo in properties)
             {
                 var value = reader[propertyInfo.Name];
+
+                if (value is DBNull) value = null;
 
                 propertyInfo.SetValue(newObject, value, null);
             }

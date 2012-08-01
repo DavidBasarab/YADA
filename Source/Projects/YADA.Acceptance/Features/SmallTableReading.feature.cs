@@ -70,28 +70,22 @@ namespace YADA.Acceptance.Features
         {
 #line 6
 #line 7
-    testRunner.Given("I have a test database created");
-#line 8
-    testRunner.Given("I have small table created");
-#line 9
-    testRunner.Given("I have small table populated");
+    testRunner.Given("I can connect to AdventureWorks database");
 #line hidden
         }
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("I want to read 1 row")]
-        [NUnit.Framework.CategoryAttribute("database")]
         public virtual void IWantToRead1Row()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read 1 row", new string[] {
-                        "database"});
-#line 12
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read 1 row", ((string[])(null)));
+#line 9
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 13
+#line 10
     testRunner.When("using a store procedure to read a record");
-#line 14
+#line 11
     testRunner.Then("the operation should happen in less than 3 ms");
 #line hidden
             this.ScenarioCleanup();
@@ -99,20 +93,18 @@ this.FeatureBackground();
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("I want to read in 15 rows out of 1000")]
-        [NUnit.Framework.CategoryAttribute("database")]
         public virtual void IWantToReadIn15RowsOutOf1000()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 15 rows out of 1000", new string[] {
-                        "database"});
-#line 17
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 15 rows out of 1000", ((string[])(null)));
+#line 13
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 18
+#line 14
     testRunner.Given("I have small table populated with 1000 rows");
-#line 19
+#line 15
     testRunner.When("using a store procedure to read in 15 records");
-#line 20
+#line 16
     testRunner.Then("the operation should happen in less than 3 ms");
 #line hidden
             this.ScenarioCleanup();
@@ -120,20 +112,18 @@ this.FeatureBackground();
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("I want to read in 150 rows out of 1000")]
-        [NUnit.Framework.CategoryAttribute("database")]
         public virtual void IWantToReadIn150RowsOutOf1000()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 150 rows out of 1000", new string[] {
-                        "database"});
-#line 23
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 150 rows out of 1000", ((string[])(null)));
+#line 18
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 24
+#line 19
     testRunner.Given("I have small table populated with 1000 rows");
-#line 25
+#line 20
     testRunner.When("using a store procedure to read in 150 records");
-#line 26
+#line 21
     testRunner.Then("the operation should happen in less than 3 ms");
 #line hidden
             this.ScenarioCleanup();
@@ -141,20 +131,18 @@ this.FeatureBackground();
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("I want to read in 1500 rows out of 10000")]
-        [NUnit.Framework.CategoryAttribute("database")]
         public virtual void IWantToReadIn1500RowsOutOf10000()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 1500 rows out of 10000", new string[] {
-                        "database"});
-#line 29
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 1500 rows out of 10000", ((string[])(null)));
+#line 23
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 30
+#line 24
     testRunner.Given("I have small table populated with 10000 rows");
-#line 31
+#line 25
     testRunner.When("using a store procedure to read in 1500 records");
-#line 32
+#line 26
     testRunner.Then("the operation should happen in less than 16 ms");
 #line hidden
             this.ScenarioCleanup();
