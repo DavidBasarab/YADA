@@ -6,6 +6,7 @@ using FluentAssertions;
 using TechTalk.SpecFlow;
 using YADA.Acceptance.Extensions;
 using YADA.Acceptance.StepDefinations.Values;
+using NUnit.Framework;
 
 namespace YADA.Acceptance.StepDefinations
 {
@@ -34,6 +35,13 @@ namespace YADA.Acceptance.StepDefinations
             var testResult = Helpers.WhenIAttemptToConnectToTheDatabase();
 
             testResult.Should().BeTrue();
+        }
+
+        [Given(@"I have small table populated with (.*) rows")]
+        public void GivenIHaveSmallTablePopulatedWithRows(int numberOfRows)
+        {
+            //ScenarioContext.Current.Pending();
+            Assert.Fail();
         }
 
         [Then(@"the operation should happen in less than (.*) ms")]
