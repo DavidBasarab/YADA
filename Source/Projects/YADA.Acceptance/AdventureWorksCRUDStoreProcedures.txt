@@ -1,0 +1,854 @@
+﻿/*
+
+    Adventure Works CRUD procedures.  Created using 
+
+    http://www.sqlbook.com/scripts/AutoGenerateCRUDStoredProcs.txt
+
+    I modified from the orginal to make the names better to read and to keep with the schema
+
+*/
+
+CREATE PROC [Person].[GetAddress_ALL]ASSET NOCOUNT ONSELECT [AddressID],     [AddressLine1],     [AddressLine2],     [City],     [StateProvinceID],     [PostalCode],     [SpatialLocation],     [rowguid],     [ModifiedDate]FROM Person.AddressSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetAddressByAddressID]    @AddressID intASSET NOCOUNT ONSELECT [AddressID],     [AddressLine1],     [AddressLine2],     [City],     [StateProvinceID],     [PostalCode],     [SpatialLocation],     [rowguid],     [ModifiedDate]FROM Person.AddressWHERE [AddressID] = @AddressIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SaveAddress]    @AddressID int,    @AddressLine1 nvarchar(60),    @AddressLine2 nvarchar(60),    @City nvarchar(30),    @StateProvinceID int,    @PostalCode nvarchar(15),    @SpatialLocation geography,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @AddressID = 0 BEGIN    INSERT INTO Person.Address (        [AddressLine1],        [AddressLine2],        [City],        [StateProvinceID],        [PostalCode],        [SpatialLocation],        [rowguid],        [ModifiedDate]    )    VALUES (        @AddressLine1,        @AddressLine2,        @City,        @StateProvinceID,        @PostalCode,        @SpatialLocation,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.Address SET         [AddressLine1] = @AddressLine1,        [AddressLine2] = @AddressLine2,        [City] = @City,        [StateProvinceID] = @StateProvinceID,        [PostalCode] = @PostalCode,        [SpatialLocation] = @SpatialLocation,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [AddressID] = @AddressIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemoveAddressByAddressID]    @AddressID intASSET NOCOUNT ONDELETE FROM Person.AddressWHERE [AddressID] = @AddressIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetAddressType_ALL]ASSET NOCOUNT ONSELECT [AddressTypeID],     [Name],     [rowguid],     [ModifiedDate]FROM Person.AddressTypeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetAddressTypeByAddressTypeID]    @AddressTypeID intASSET NOCOUNT ONSELECT [AddressTypeID],     [Name],     [rowguid],     [ModifiedDate]FROM Person.AddressTypeWHERE [AddressTypeID] = @AddressTypeIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SaveAddressType]    @AddressTypeID int,    @Name nvarchar(50),    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @AddressTypeID = 0 BEGIN    INSERT INTO Person.AddressType (        [Name],        [rowguid],        [ModifiedDate]    )    VALUES (        @Name,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.AddressType SET         [Name] = @Name,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [AddressTypeID] = @AddressTypeIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemoveAddressTypeByAddressTypeID]    @AddressTypeID intASSET NOCOUNT ONDELETE FROM Person.AddressTypeWHERE [AddressTypeID] = @AddressTypeIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[GetAWBuildVersion_ALL]ASSET NOCOUNT ONSELECT [SystemInformationID],     [Database Version],     [VersionDate],     [ModifiedDate]FROM dbo.AWBuildVersionSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[GetAWBuildVersionByAWBuildVersionID]    @SystemInformationID tinyintASSET NOCOUNT ONSELECT [SystemInformationID],     [Database Version],     [VersionDate],     [ModifiedDate]FROM dbo.AWBuildVersionWHERE [SystemInformationID] = @SystemInformationIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[SaveAWBuildVersion]    @SystemInformationID tinyint,    @DatabaseVersion nvarchar(25),    @VersionDate datetime,    @ModifiedDate datetimeASSET NOCOUNT ONIF @SystemInformationID = 0 BEGIN    INSERT INTO dbo.AWBuildVersion (        [Database Version],        [VersionDate],        [ModifiedDate]    )    VALUES (        @DatabaseVersion,        @VersionDate,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE dbo.AWBuildVersion SET         [Database Version] = @DatabaseVersion,        [VersionDate] = @VersionDate,        [ModifiedDate] = @ModifiedDate    WHERE [SystemInformationID] = @SystemInformationIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[RemoveAWBuildVersionByAWBuildVersionID]    @SystemInformationID tinyintASSET NOCOUNT ONDELETE FROM dbo.AWBuildVersionWHERE [SystemInformationID] = @SystemInformationIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetBillOfMaterials_ALL]ASSET NOCOUNT ONSELECT [BillOfMaterialsID],     [ProductAssemblyID],     [ComponentID],     [StartDate],     [EndDate],     [UnitMeasureCode],     [BOMLevel],     [PerAssemblyQty],     [ModifiedDate]FROM Production.BillOfMaterialsSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetBillOfMaterialsByBillOfMaterialsID]    @BillOfMaterialsID intASSET NOCOUNT ONSELECT [BillOfMaterialsID],     [ProductAssemblyID],     [ComponentID],     [StartDate],     [EndDate],     [UnitMeasureCode],     [BOMLevel],     [PerAssemblyQty],     [ModifiedDate]FROM Production.BillOfMaterialsWHERE [BillOfMaterialsID] = @BillOfMaterialsIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveBillOfMaterials]    @BillOfMaterialsID int,    @ProductAssemblyID int,    @ComponentID int,    @StartDate datetime,    @EndDate datetime,    @UnitMeasureCode nchar(3),    @BOMLevel smallint,    @PerAssemblyQty decimal,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BillOfMaterialsID = 0 BEGIN    INSERT INTO Production.BillOfMaterials (        [ProductAssemblyID],        [ComponentID],        [StartDate],        [EndDate],        [UnitMeasureCode],        [BOMLevel],        [PerAssemblyQty],        [ModifiedDate]    )    VALUES (        @ProductAssemblyID,        @ComponentID,        @StartDate,        @EndDate,        @UnitMeasureCode,        @BOMLevel,        @PerAssemblyQty,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.BillOfMaterials SET         [ProductAssemblyID] = @ProductAssemblyID,        [ComponentID] = @ComponentID,        [StartDate] = @StartDate,        [EndDate] = @EndDate,        [UnitMeasureCode] = @UnitMeasureCode,        [BOMLevel] = @BOMLevel,        [PerAssemblyQty] = @PerAssemblyQty,        [ModifiedDate] = @ModifiedDate    WHERE [BillOfMaterialsID] = @BillOfMaterialsIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveBillOfMaterialsByBillOfMaterialsID]    @BillOfMaterialsID intASSET NOCOUNT ONDELETE FROM Production.BillOfMaterialsWHERE [BillOfMaterialsID] = @BillOfMaterialsIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetBusinessEntity_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [rowguid],     [ModifiedDate]FROM Person.BusinessEntitySET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetBusinessEntityByBusinessEntityID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [rowguid],     [ModifiedDate]FROM Person.BusinessEntityWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SaveBusinessEntity]    @BusinessEntityID int,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Person.BusinessEntity (        [rowguid],        [ModifiedDate]    )    VALUES (        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.BusinessEntity SET         [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemoveBusinessEntityByBusinessEntityID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Person.BusinessEntityWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetBusinessEntityAddress_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [AddressID],     [AddressTypeID],     [rowguid],     [ModifiedDate]FROM Person.BusinessEntityAddressSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetBusinessEntityAddressByBusinessEntityAddressID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [AddressID],     [AddressTypeID],     [rowguid],     [ModifiedDate]FROM Person.BusinessEntityAddressWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SaveBusinessEntityAddress]    @BusinessEntityID int,    @AddressID int,    @AddressTypeID int,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Person.BusinessEntityAddress (        [AddressID],        [AddressTypeID],        [rowguid],        [ModifiedDate]    )    VALUES (        @AddressID,        @AddressTypeID,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.BusinessEntityAddress SET         [AddressID] = @AddressID,        [AddressTypeID] = @AddressTypeID,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemoveBusinessEntityAddressByBusinessEntityAddressID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Person.BusinessEntityAddressWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetBusinessEntityContact_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [PersonID],     [ContactTypeID],     [rowguid],     [ModifiedDate]FROM Person.BusinessEntityContactSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetBusinessEntityContactByBusinessEntityContactID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [PersonID],     [ContactTypeID],     [rowguid],     [ModifiedDate]FROM Person.BusinessEntityContactWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SaveBusinessEntityContact]    @BusinessEntityID int,    @PersonID int,    @ContactTypeID int,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Person.BusinessEntityContact (        [PersonID],        [ContactTypeID],        [rowguid],        [ModifiedDate]    )    VALUES (        @PersonID,        @ContactTypeID,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.BusinessEntityContact SET         [PersonID] = @PersonID,        [ContactTypeID] = @ContactTypeID,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemoveBusinessEntityContactByBusinessEntityContactID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Person.BusinessEntityContactWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetContactType_ALL]ASSET NOCOUNT ONSELECT [ContactTypeID],     [Name],     [ModifiedDate]FROM Person.ContactTypeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetContactTypeByContactTypeID]    @ContactTypeID intASSET NOCOUNT ONSELECT [ContactTypeID],     [Name],     [ModifiedDate]FROM Person.ContactTypeWHERE [ContactTypeID] = @ContactTypeIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SaveContactType]    @ContactTypeID int,    @Name nvarchar(50),    @ModifiedDate datetimeASSET NOCOUNT ONIF @ContactTypeID = 0 BEGIN    INSERT INTO Person.ContactType (        [Name],        [ModifiedDate]    )    VALUES (        @Name,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.ContactType SET         [Name] = @Name,        [ModifiedDate] = @ModifiedDate    WHERE [ContactTypeID] = @ContactTypeIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemoveContactTypeByContactTypeID]    @ContactTypeID intASSET NOCOUNT ONDELETE FROM Person.ContactTypeWHERE [ContactTypeID] = @ContactTypeIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetCountryRegion_ALL]ASSET NOCOUNT ONSELECT [CountryRegionCode],     [Name],     [ModifiedDate]FROM Person.CountryRegionSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetCountryRegionByCountryRegionID]    @CountryRegionCode nvarchar(3)ASSET NOCOUNT ONSELECT [CountryRegionCode],     [Name],     [ModifiedDate]FROM Person.CountryRegionWHERE [CountryRegionCode] = @CountryRegionCodeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SaveCountryRegion]    @CountryRegionCode nvarchar(3),    @Name nvarchar(50),    @ModifiedDate datetimeASSET NOCOUNT ONIF @CountryRegionCode = '' BEGIN    INSERT INTO Person.CountryRegion (        [CountryRegionCode],        [Name],        [ModifiedDate]    )    VALUES (        @CountryRegionCode,        @Name,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.CountryRegion SET         [Name] = @Name,        [ModifiedDate] = @ModifiedDate    WHERE [CountryRegionCode] = @CountryRegionCodeENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemoveCountryRegionByCountryRegionID]    @CountryRegionCode nvarchar(3)ASSET NOCOUNT ONDELETE FROM Person.CountryRegionWHERE [CountryRegionCode] = @CountryRegionCodeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetCountryRegionCurrency_ALL]ASSET NOCOUNT ONSELECT [CountryRegionCode],     [CurrencyCode],     [ModifiedDate]FROM Sales.CountryRegionCurrencySET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetCountryRegionCurrencyByCountryRegionCurrencyID]    @CountryRegionCode nvarchar(3)ASSET NOCOUNT ONSELECT [CountryRegionCode],     [CurrencyCode],     [ModifiedDate]FROM Sales.CountryRegionCurrencyWHERE [CountryRegionCode] = @CountryRegionCodeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveCountryRegionCurrency]    @CountryRegionCode nvarchar(3),    @CurrencyCode nchar(3),    @ModifiedDate datetimeASSET NOCOUNT ONIF @CountryRegionCode = '' BEGIN    INSERT INTO Sales.CountryRegionCurrency (        [CountryRegionCode],        [CurrencyCode],        [ModifiedDate]    )    VALUES (        @CountryRegionCode,        @CurrencyCode,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.CountryRegionCurrency SET         [CurrencyCode] = @CurrencyCode,        [ModifiedDate] = @ModifiedDate    WHERE [CountryRegionCode] = @CountryRegionCodeENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveCountryRegionCurrencyByCountryRegionCurrencyID]    @CountryRegionCode nvarchar(3)ASSET NOCOUNT ONDELETE FROM Sales.CountryRegionCurrencyWHERE [CountryRegionCode] = @CountryRegionCodeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetCreditCard_ALL]ASSET NOCOUNT ONSELECT [CreditCardID],     [CardType],     [CardNumber],     [ExpMonth],     [ExpYear],     [ModifiedDate]FROM Sales.CreditCardSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetCreditCardByCreditCardID]    @CreditCardID intASSET NOCOUNT ONSELECT [CreditCardID],     [CardType],     [CardNumber],     [ExpMonth],     [ExpYear],     [ModifiedDate]FROM Sales.CreditCardWHERE [CreditCardID] = @CreditCardIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveCreditCard]    @CreditCardID int,    @CardType nvarchar(50),    @CardNumber nvarchar(25),    @ExpMonth tinyint,    @ExpYear smallint,    @ModifiedDate datetimeASSET NOCOUNT ONIF @CreditCardID = 0 BEGIN    INSERT INTO Sales.CreditCard (        [CardType],        [CardNumber],        [ExpMonth],        [ExpYear],        [ModifiedDate]    )    VALUES (        @CardType,        @CardNumber,        @ExpMonth,        @ExpYear,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.CreditCard SET         [CardType] = @CardType,        [CardNumber] = @CardNumber,        [ExpMonth] = @ExpMonth,        [ExpYear] = @ExpYear,        [ModifiedDate] = @ModifiedDate    WHERE [CreditCardID] = @CreditCardIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveCreditCardByCreditCardID]    @CreditCardID intASSET NOCOUNT ONDELETE FROM Sales.CreditCardWHERE [CreditCardID] = @CreditCardIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetCulture_ALL]ASSET NOCOUNT ONSELECT [CultureID],     [Name],     [ModifiedDate]FROM Production.CultureSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetCultureByCultureID]    @CultureID nchar(6)ASSET NOCOUNT ONSELECT [CultureID],     [Name],     [ModifiedDate]FROM Production.CultureWHERE [CultureID] = @CultureIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveCulture]    @CultureID nchar(6),    @Name nvarchar(50),    @ModifiedDate datetimeASSET NOCOUNT ONIF @CultureID = '' BEGIN    INSERT INTO Production.Culture (        [CultureID],        [Name],        [ModifiedDate]    )    VALUES (        @CultureID,        @Name,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.Culture SET         [Name] = @Name,        [ModifiedDate] = @ModifiedDate    WHERE [CultureID] = @CultureIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveCultureByCultureID]    @CultureID nchar(6)ASSET NOCOUNT ONDELETE FROM Production.CultureWHERE [CultureID] = @CultureIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetCurrency_ALL]ASSET NOCOUNT ONSELECT [CurrencyCode],     [Name],     [ModifiedDate]FROM Sales.CurrencySET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetCurrencyByCurrencyID]    @CurrencyCode nchar(3)ASSET NOCOUNT ONSELECT [CurrencyCode],     [Name],     [ModifiedDate]FROM Sales.CurrencyWHERE [CurrencyCode] = @CurrencyCodeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveCurrency]    @CurrencyCode nchar(3),    @Name nvarchar(50),    @ModifiedDate datetimeASSET NOCOUNT ONIF @CurrencyCode = '' BEGIN    INSERT INTO Sales.Currency (        [CurrencyCode],        [Name],        [ModifiedDate]    )    VALUES (        @CurrencyCode,        @Name,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.Currency SET         [Name] = @Name,        [ModifiedDate] = @ModifiedDate    WHERE [CurrencyCode] = @CurrencyCodeENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveCurrencyByCurrencyID]    @CurrencyCode nchar(3)ASSET NOCOUNT ONDELETE FROM Sales.CurrencyWHERE [CurrencyCode] = @CurrencyCodeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetCurrencyRate_ALL]ASSET NOCOUNT ONSELECT [CurrencyRateID],     [CurrencyRateDate],     [FromCurrencyCode],     [ToCurrencyCode],     [AverageRate],     [EndOfDayRate],     [ModifiedDate]FROM Sales.CurrencyRateSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetCurrencyRateByCurrencyRateID]    @CurrencyRateID intASSET NOCOUNT ONSELECT [CurrencyRateID],     [CurrencyRateDate],     [FromCurrencyCode],     [ToCurrencyCode],     [AverageRate],     [EndOfDayRate],     [ModifiedDate]FROM Sales.CurrencyRateWHERE [CurrencyRateID] = @CurrencyRateIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveCurrencyRate]    @CurrencyRateID int,    @CurrencyRateDate datetime,    @FromCurrencyCode nchar(3),    @ToCurrencyCode nchar(3),    @AverageRate money,    @EndOfDayRate money,    @ModifiedDate datetimeASSET NOCOUNT ONIF @CurrencyRateID = 0 BEGIN    INSERT INTO Sales.CurrencyRate (        [CurrencyRateDate],        [FromCurrencyCode],        [ToCurrencyCode],        [AverageRate],        [EndOfDayRate],        [ModifiedDate]    )    VALUES (        @CurrencyRateDate,        @FromCurrencyCode,        @ToCurrencyCode,        @AverageRate,        @EndOfDayRate,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.CurrencyRate SET         [CurrencyRateDate] = @CurrencyRateDate,        [FromCurrencyCode] = @FromCurrencyCode,        [ToCurrencyCode] = @ToCurrencyCode,        [AverageRate] = @AverageRate,        [EndOfDayRate] = @EndOfDayRate,        [ModifiedDate] = @ModifiedDate    WHERE [CurrencyRateID] = @CurrencyRateIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveCurrencyRateByCurrencyRateID]    @CurrencyRateID intASSET NOCOUNT ONDELETE FROM Sales.CurrencyRateWHERE [CurrencyRateID] = @CurrencyRateIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetCustomer_ALL]ASSET NOCOUNT ONSELECT [CustomerID],     [PersonID],     [StoreID],     [TerritoryID],     [AccountNumber],     [rowguid],     [ModifiedDate]FROM Sales.CustomerSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetCustomerByCustomerID]    @CustomerID intASSET NOCOUNT ONSELECT [CustomerID],     [PersonID],     [StoreID],     [TerritoryID],     [AccountNumber],     [rowguid],     [ModifiedDate]FROM Sales.CustomerWHERE [CustomerID] = @CustomerIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveCustomer]    @CustomerID int,    @PersonID int,    @StoreID int,    @TerritoryID int,    @AccountNumber varchar(10),    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @CustomerID = 0 BEGIN    INSERT INTO Sales.Customer (        [PersonID],        [StoreID],        [TerritoryID],        [AccountNumber],        [rowguid],        [ModifiedDate]    )    VALUES (        @PersonID,        @StoreID,        @TerritoryID,        @AccountNumber,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.Customer SET         [PersonID] = @PersonID,        [StoreID] = @StoreID,        [TerritoryID] = @TerritoryID,        [AccountNumber] = @AccountNumber,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [CustomerID] = @CustomerIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveCustomerByCustomerID]    @CustomerID intASSET NOCOUNT ONDELETE FROM Sales.CustomerWHERE [CustomerID] = @CustomerIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[GetDatabaseLog_ALL]ASSET NOCOUNT ONSELECT [DatabaseLogID],     [PostTime],     [DatabaseUser],     [Event],     [Schema],     [Object],     [TSQL],     [XmlEvent]FROM dbo.DatabaseLogSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[GetDatabaseLogByDatabaseLogID]    @DatabaseLogID intASSET NOCOUNT ONSELECT [DatabaseLogID],     [PostTime],     [DatabaseUser],     [Event],     [Schema],     [Object],     [TSQL],     [XmlEvent]FROM dbo.DatabaseLogWHERE [DatabaseLogID] = @DatabaseLogIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[SaveDatabaseLog]    @DatabaseLogID int,    @PostTime datetime,    @DatabaseUser nvarchar(128),    @Event nvarchar(128),    @Schema nvarchar(128),    @Object nvarchar(128),    @TSQL nvarchar(-1),    @XmlEvent xmlASSET NOCOUNT ONIF @DatabaseLogID = 0 BEGIN    INSERT INTO dbo.DatabaseLog (        [PostTime],        [DatabaseUser],        [Event],        [Schema],        [Object],        [TSQL],        [XmlEvent]    )    VALUES (        @PostTime,        @DatabaseUser,        @Event,        @Schema,        @Object,        @TSQL,        @XmlEvent    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE dbo.DatabaseLog SET         [PostTime] = @PostTime,        [DatabaseUser] = @DatabaseUser,        [Event] = @Event,        [Schema] = @Schema,        [Object] = @Object,        [TSQL] = @TSQL,        [XmlEvent] = @XmlEvent    WHERE [DatabaseLogID] = @DatabaseLogIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[RemoveDatabaseLogByDatabaseLogID]    @DatabaseLogID intASSET NOCOUNT ONDELETE FROM dbo.DatabaseLogWHERE [DatabaseLogID] = @DatabaseLogIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetDepartment_ALL]ASSET NOCOUNT ONSELECT [DepartmentID],     [Name],     [GroupName],     [ModifiedDate]FROM HumanResources.DepartmentSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetDepartmentByDepartmentID]    @DepartmentID smallintASSET NOCOUNT ONSELECT [DepartmentID],     [Name],     [GroupName],     [ModifiedDate]FROM HumanResources.DepartmentWHERE [DepartmentID] = @DepartmentIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[SaveDepartment]    @DepartmentID smallint,    @Name nvarchar(50),    @GroupName nvarchar(50),    @ModifiedDate datetimeASSET NOCOUNT ONIF @DepartmentID = 0 BEGIN    INSERT INTO HumanResources.Department (        [Name],        [GroupName],        [ModifiedDate]    )    VALUES (        @Name,        @GroupName,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE HumanResources.Department SET         [Name] = @Name,        [GroupName] = @GroupName,        [ModifiedDate] = @ModifiedDate    WHERE [DepartmentID] = @DepartmentIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[RemoveDepartmentByDepartmentID]    @DepartmentID smallintASSET NOCOUNT ONDELETE FROM HumanResources.DepartmentWHERE [DepartmentID] = @DepartmentIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetDocument_ALL]ASSET NOCOUNT ONSELECT [DocumentNode],     [DocumentLevel],     [Title],     [Owner],     [FolderFlag],     [FileName],     [FileExtension],     [Revision],     [ChangeNumber],     [Status],     [DocumentSummary],     [Document],     [rowguid],     [ModifiedDate]FROM Production.DocumentSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetDocumentByDocumentID]    @DocumentNode hierarchyidASSET NOCOUNT ONSELECT [DocumentNode],     [DocumentLevel],     [Title],     [Owner],     [FolderFlag],     [FileName],     [FileExtension],     [Revision],     [ChangeNumber],     [Status],     [DocumentSummary],     [Document],     [rowguid],     [ModifiedDate]FROM Production.DocumentWHERE [DocumentNode] = @DocumentNodeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveDocument]    @DocumentNode hierarchyid,    @DocumentLevel smallint,    @Title nvarchar(50),    @Owner int,    @FolderFlag bit,    @FileName nvarchar(400),    @FileExtension nvarchar(8),    @Revision nchar(5),    @ChangeNumber int,    @Status tinyint,    @DocumentSummary nvarchar(-1),    @Document varbinary,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @DocumentNode = '' BEGIN    INSERT INTO Production.Document (        [DocumentNode],        [DocumentLevel],        [Title],        [Owner],        [FolderFlag],        [FileName],        [FileExtension],        [Revision],        [ChangeNumber],        [Status],        [DocumentSummary],        [Document],        [rowguid],        [ModifiedDate]    )    VALUES (        @DocumentNode,        @DocumentLevel,        @Title,        @Owner,        @FolderFlag,        @FileName,        @FileExtension,        @Revision,        @ChangeNumber,        @Status,        @DocumentSummary,        @Document,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.Document SET         [DocumentLevel] = @DocumentLevel,        [Title] = @Title,        [Owner] = @Owner,        [FolderFlag] = @FolderFlag,        [FileName] = @FileName,        [FileExtension] = @FileExtension,        [Revision] = @Revision,        [ChangeNumber] = @ChangeNumber,        [Status] = @Status,        [DocumentSummary] = @DocumentSummary,        [Document] = @Document,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [DocumentNode] = @DocumentNodeENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveDocumentByDocumentID]    @DocumentNode hierarchyidASSET NOCOUNT ONDELETE FROM Production.DocumentWHERE [DocumentNode] = @DocumentNodeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetEmailAddress_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [EmailAddressID],     [EmailAddress],     [rowguid],     [ModifiedDate]FROM Person.EmailAddressSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetEmailAddressByEmailAddressID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [EmailAddressID],     [EmailAddress],     [rowguid],     [ModifiedDate]FROM Person.EmailAddressWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SaveEmailAddress]    @BusinessEntityID int,    @EmailAddressID int,    @EmailAddress nvarchar(50),    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Person.EmailAddress (        [EmailAddressID],        [EmailAddress],        [rowguid],        [ModifiedDate]    )    VALUES (        @EmailAddressID,        @EmailAddress,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.EmailAddress SET         [EmailAddressID] = @EmailAddressID,        [EmailAddress] = @EmailAddress,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemoveEmailAddressByEmailAddressID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Person.EmailAddressWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetEmployee_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [NationalIDNumber],     [LoginID],     [OrganizationNode],     [OrganizationLevel],     [JobTitle],     [BirthDate],     [MaritalStatus],     [Gender],     [HireDate],     [SalariedFlag],     [VacationHours],     [SickLeaveHours],     [CurrentFlag],     [rowguid],     [ModifiedDate]FROM HumanResources.EmployeeSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetEmployeeByEmployeeID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [NationalIDNumber],     [LoginID],     [OrganizationNode],     [OrganizationLevel],     [JobTitle],     [BirthDate],     [MaritalStatus],     [Gender],     [HireDate],     [SalariedFlag],     [VacationHours],     [SickLeaveHours],     [CurrentFlag],     [rowguid],     [ModifiedDate]FROM HumanResources.EmployeeWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[SaveEmployee]    @BusinessEntityID int,    @NationalIDNumber nvarchar(15),    @LoginID nvarchar(256),    @OrganizationNode hierarchyid,    @OrganizationLevel smallint,    @JobTitle nvarchar(50),    @BirthDate date,    @MaritalStatus nchar(1),    @Gender nchar(1),    @HireDate date,    @SalariedFlag bit,    @VacationHours smallint,    @SickLeaveHours smallint,    @CurrentFlag bit,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO HumanResources.Employee (        [NationalIDNumber],        [LoginID],        [OrganizationNode],        [OrganizationLevel],        [JobTitle],        [BirthDate],        [MaritalStatus],        [Gender],        [HireDate],        [SalariedFlag],        [VacationHours],        [SickLeaveHours],        [CurrentFlag],        [rowguid],        [ModifiedDate]    )    VALUES (        @NationalIDNumber,        @LoginID,        @OrganizationNode,        @OrganizationLevel,        @JobTitle,        @BirthDate,        @MaritalStatus,        @Gender,        @HireDate,        @SalariedFlag,        @VacationHours,        @SickLeaveHours,        @CurrentFlag,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE HumanResources.Employee SET         [NationalIDNumber] = @NationalIDNumber,        [LoginID] = @LoginID,        [OrganizationNode] = @OrganizationNode,        [OrganizationLevel] = @OrganizationLevel,        [JobTitle] = @JobTitle,        [BirthDate] = @BirthDate,        [MaritalStatus] = @MaritalStatus,        [Gender] = @Gender,        [HireDate] = @HireDate,        [SalariedFlag] = @SalariedFlag,        [VacationHours] = @VacationHours,        [SickLeaveHours] = @SickLeaveHours,        [CurrentFlag] = @CurrentFlag,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[RemoveEmployeeByEmployeeID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM HumanResources.EmployeeWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetEmployeeDepartmentHistory_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [DepartmentID],     [ShiftID],     [StartDate],     [EndDate],     [ModifiedDate]FROM HumanResources.EmployeeDepartmentHistorySET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetEmployeeDepartmentHistoryByEmployeeDepartmentHistoryID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [DepartmentID],     [ShiftID],     [StartDate],     [EndDate],     [ModifiedDate]FROM HumanResources.EmployeeDepartmentHistoryWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[SaveEmployeeDepartmentHistory]    @BusinessEntityID int,    @DepartmentID smallint,    @ShiftID tinyint,    @StartDate date,    @EndDate date,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO HumanResources.EmployeeDepartmentHistory (        [DepartmentID],        [ShiftID],        [StartDate],        [EndDate],        [ModifiedDate]    )    VALUES (        @DepartmentID,        @ShiftID,        @StartDate,        @EndDate,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE HumanResources.EmployeeDepartmentHistory SET         [DepartmentID] = @DepartmentID,        [ShiftID] = @ShiftID,        [StartDate] = @StartDate,        [EndDate] = @EndDate,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[RemoveEmployeeDepartmentHistoryByEmployeeDepartmentHistoryID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM HumanResources.EmployeeDepartmentHistoryWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetEmployeePayHistory_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [RateChangeDate],     [Rate],     [PayFrequency],     [ModifiedDate]FROM HumanResources.EmployeePayHistorySET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetEmployeePayHistoryByEmployeePayHistoryID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [RateChangeDate],     [Rate],     [PayFrequency],     [ModifiedDate]FROM HumanResources.EmployeePayHistoryWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[SaveEmployeePayHistory]    @BusinessEntityID int,    @RateChangeDate datetime,    @Rate money,    @PayFrequency tinyint,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO HumanResources.EmployeePayHistory (        [RateChangeDate],        [Rate],        [PayFrequency],        [ModifiedDate]    )    VALUES (        @RateChangeDate,        @Rate,        @PayFrequency,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE HumanResources.EmployeePayHistory SET         [RateChangeDate] = @RateChangeDate,        [Rate] = @Rate,        [PayFrequency] = @PayFrequency,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[RemoveEmployeePayHistoryByEmployeePayHistoryID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM HumanResources.EmployeePayHistoryWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[GetErrorLog_ALL]ASSET NOCOUNT ONSELECT [ErrorLogID],     [ErrorTime],     [UserName],     [ErrorNumber],     [ErrorSeverity],     [ErrorState],     [ErrorProcedure],     [ErrorLine],     [ErrorMessage]FROM dbo.ErrorLogSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[GetErrorLogByErrorLogID]    @ErrorLogID intASSET NOCOUNT ONSELECT [ErrorLogID],     [ErrorTime],     [UserName],     [ErrorNumber],     [ErrorSeverity],     [ErrorState],     [ErrorProcedure],     [ErrorLine],     [ErrorMessage]FROM dbo.ErrorLogWHERE [ErrorLogID] = @ErrorLogIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[SaveErrorLog]    @ErrorLogID int,    @ErrorTime datetime,    @UserName nvarchar(128),    @ErrorNumber int,    @ErrorSeverity int,    @ErrorState int,    @ErrorProcedure nvarchar(126),    @ErrorLine int,    @ErrorMessage nvarchar(4000)ASSET NOCOUNT ONIF @ErrorLogID = 0 BEGIN    INSERT INTO dbo.ErrorLog (        [ErrorTime],        [UserName],        [ErrorNumber],        [ErrorSeverity],        [ErrorState],        [ErrorProcedure],        [ErrorLine],        [ErrorMessage]    )    VALUES (        @ErrorTime,        @UserName,        @ErrorNumber,        @ErrorSeverity,        @ErrorState,        @ErrorProcedure,        @ErrorLine,        @ErrorMessage    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE dbo.ErrorLog SET         [ErrorTime] = @ErrorTime,        [UserName] = @UserName,        [ErrorNumber] = @ErrorNumber,        [ErrorSeverity] = @ErrorSeverity,        [ErrorState] = @ErrorState,        [ErrorProcedure] = @ErrorProcedure,        [ErrorLine] = @ErrorLine,        [ErrorMessage] = @ErrorMessage    WHERE [ErrorLogID] = @ErrorLogIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [dbo].[RemoveErrorLogByErrorLogID]    @ErrorLogID intASSET NOCOUNT ONDELETE FROM dbo.ErrorLogWHERE [ErrorLogID] = @ErrorLogIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetIllustration_ALL]ASSET NOCOUNT ONSELECT [IllustrationID],     [Diagram],     [ModifiedDate]FROM Production.IllustrationSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetIllustrationByIllustrationID]    @IllustrationID intASSET NOCOUNT ONSELECT [IllustrationID],     [Diagram],     [ModifiedDate]FROM Production.IllustrationWHERE [IllustrationID] = @IllustrationIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveIllustration]    @IllustrationID int,    @Diagram xml,    @ModifiedDate datetimeASSET NOCOUNT ONIF @IllustrationID = 0 BEGIN    INSERT INTO Production.Illustration (        [Diagram],        [ModifiedDate]    )    VALUES (        @Diagram,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.Illustration SET         [Diagram] = @Diagram,        [ModifiedDate] = @ModifiedDate    WHERE [IllustrationID] = @IllustrationIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveIllustrationByIllustrationID]    @IllustrationID intASSET NOCOUNT ONDELETE FROM Production.IllustrationWHERE [IllustrationID] = @IllustrationIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetJobCandidate_ALL]ASSET NOCOUNT ONSELECT [JobCandidateID],     [BusinessEntityID],     [Resume],     [ModifiedDate]FROM HumanResources.JobCandidateSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetJobCandidateByJobCandidateID]    @JobCandidateID intASSET NOCOUNT ONSELECT [JobCandidateID],     [BusinessEntityID],     [Resume],     [ModifiedDate]FROM HumanResources.JobCandidateWHERE [JobCandidateID] = @JobCandidateIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[SaveJobCandidate]    @JobCandidateID int,    @BusinessEntityID int,    @Resume xml,    @ModifiedDate datetimeASSET NOCOUNT ONIF @JobCandidateID = 0 BEGIN    INSERT INTO HumanResources.JobCandidate (        [BusinessEntityID],        [Resume],        [ModifiedDate]    )    VALUES (        @BusinessEntityID,        @Resume,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE HumanResources.JobCandidate SET         [BusinessEntityID] = @BusinessEntityID,        [Resume] = @Resume,        [ModifiedDate] = @ModifiedDate    WHERE [JobCandidateID] = @JobCandidateIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[RemoveJobCandidateByJobCandidateID]    @JobCandidateID intASSET NOCOUNT ONDELETE FROM HumanResources.JobCandidateWHERE [JobCandidateID] = @JobCandidateIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetLocation_ALL]ASSET NOCOUNT ONSELECT [LocationID],     [Name],     [CostRate],     [Availability],     [ModifiedDate]FROM Production.LocationSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetLocationByLocationID]    @LocationID smallintASSET NOCOUNT ONSELECT [LocationID],     [Name],     [CostRate],     [Availability],     [ModifiedDate]FROM Production.LocationWHERE [LocationID] = @LocationIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveLocation]    @LocationID smallint,    @Name nvarchar(50),    @CostRate smallmoney,    @Availability decimal,    @ModifiedDate datetimeASSET NOCOUNT ONIF @LocationID = 0 BEGIN    INSERT INTO Production.Location (        [Name],        [CostRate],        [Availability],        [ModifiedDate]    )    VALUES (        @Name,        @CostRate,        @Availability,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.Location SET         [Name] = @Name,        [CostRate] = @CostRate,        [Availability] = @Availability,        [ModifiedDate] = @ModifiedDate    WHERE [LocationID] = @LocationIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveLocationByLocationID]    @LocationID smallintASSET NOCOUNT ONDELETE FROM Production.LocationWHERE [LocationID] = @LocationIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetPassword_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [PasswordHash],     [PasswordSalt],     [rowguid],     [ModifiedDate]FROM Person.PasswordSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetPasswordByPasswordID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [PasswordHash],     [PasswordSalt],     [rowguid],     [ModifiedDate]FROM Person.PasswordWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SavePassword]    @BusinessEntityID int,    @PasswordHash varchar(128),    @PasswordSalt varchar(10),    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Person.Password (        [PasswordHash],        [PasswordSalt],        [rowguid],        [ModifiedDate]    )    VALUES (        @PasswordHash,        @PasswordSalt,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.Password SET         [PasswordHash] = @PasswordHash,        [PasswordSalt] = @PasswordSalt,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemovePasswordByPasswordID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Person.PasswordWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetPerson_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [PersonType],     [NameStyle],     [Title],     [FirstName],     [MiddleName],     [LastName],     [Suffix],     [EmailPromotion],     [AdditionalContactInfo],     [Demographics],     [rowguid],     [ModifiedDate]FROM Person.PersonSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetPersonByPersonID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [PersonType],     [NameStyle],     [Title],     [FirstName],     [MiddleName],     [LastName],     [Suffix],     [EmailPromotion],     [AdditionalContactInfo],     [Demographics],     [rowguid],     [ModifiedDate]FROM Person.PersonWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SavePerson]    @BusinessEntityID int,    @PersonType nchar(2),    @NameStyle bit,    @Title nvarchar(8),    @FirstName nvarchar(50),    @MiddleName nvarchar(50),    @LastName nvarchar(50),    @Suffix nvarchar(10),    @EmailPromotion int,    @AdditionalContactInfo xml,    @Demographics xml,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Person.Person (        [PersonType],        [NameStyle],        [Title],        [FirstName],        [MiddleName],        [LastName],        [Suffix],        [EmailPromotion],        [AdditionalContactInfo],        [Demographics],        [rowguid],        [ModifiedDate]    )    VALUES (        @PersonType,        @NameStyle,        @Title,        @FirstName,        @MiddleName,        @LastName,        @Suffix,        @EmailPromotion,        @AdditionalContactInfo,        @Demographics,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.Person SET         [PersonType] = @PersonType,        [NameStyle] = @NameStyle,        [Title] = @Title,        [FirstName] = @FirstName,        [MiddleName] = @MiddleName,        [LastName] = @LastName,        [Suffix] = @Suffix,        [EmailPromotion] = @EmailPromotion,        [AdditionalContactInfo] = @AdditionalContactInfo,        [Demographics] = @Demographics,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemovePersonByPersonID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Person.PersonWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetPersonCreditCard_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [CreditCardID],     [ModifiedDate]FROM Sales.PersonCreditCardSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetPersonCreditCardByPersonCreditCardID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [CreditCardID],     [ModifiedDate]FROM Sales.PersonCreditCardWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SavePersonCreditCard]    @BusinessEntityID int,    @CreditCardID int,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Sales.PersonCreditCard (        [CreditCardID],        [ModifiedDate]    )    VALUES (        @CreditCardID,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.PersonCreditCard SET         [CreditCardID] = @CreditCardID,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemovePersonCreditCardByPersonCreditCardID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Sales.PersonCreditCardWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetPersonPhone_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [PhoneNumber],     [PhoneNumberTypeID],     [ModifiedDate]FROM Person.PersonPhoneSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetPersonPhoneByPersonPhoneID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [PhoneNumber],     [PhoneNumberTypeID],     [ModifiedDate]FROM Person.PersonPhoneWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SavePersonPhone]    @BusinessEntityID int,    @PhoneNumber nvarchar(25),    @PhoneNumberTypeID int,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Person.PersonPhone (        [PhoneNumber],        [PhoneNumberTypeID],        [ModifiedDate]    )    VALUES (        @PhoneNumber,        @PhoneNumberTypeID,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.PersonPhone SET         [PhoneNumber] = @PhoneNumber,        [PhoneNumberTypeID] = @PhoneNumberTypeID,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemovePersonPhoneByPersonPhoneID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Person.PersonPhoneWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetPhoneNumberType_ALL]ASSET NOCOUNT ONSELECT [PhoneNumberTypeID],     [Name],     [ModifiedDate]FROM Person.PhoneNumberTypeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetPhoneNumberTypeByPhoneNumberTypeID]    @PhoneNumberTypeID intASSET NOCOUNT ONSELECT [PhoneNumberTypeID],     [Name],     [ModifiedDate]FROM Person.PhoneNumberTypeWHERE [PhoneNumberTypeID] = @PhoneNumberTypeIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SavePhoneNumberType]    @PhoneNumberTypeID int,    @Name nvarchar(50),    @ModifiedDate datetimeASSET NOCOUNT ONIF @PhoneNumberTypeID = 0 BEGIN    INSERT INTO Person.PhoneNumberType (        [Name],        [ModifiedDate]    )    VALUES (        @Name,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.PhoneNumberType SET         [Name] = @Name,        [ModifiedDate] = @ModifiedDate    WHERE [PhoneNumberTypeID] = @PhoneNumberTypeIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemovePhoneNumberTypeByPhoneNumberTypeID]    @PhoneNumberTypeID intASSET NOCOUNT ONDELETE FROM Person.PhoneNumberTypeWHERE [PhoneNumberTypeID] = @PhoneNumberTypeIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProduct_ALL]ASSET NOCOUNT ONSELECT [ProductID],     [Name],     [ProductNumber],     [MakeFlag],     [FinishedGoodsFlag],     [Color],     [SafetyStockLevel],     [ReorderPoint],     [StandardCost],     [ListPrice],     [Size],     [SizeUnitMeasureCode],     [WeightUnitMeasureCode],     [Weight],     [DaysToManufacture],     [ProductLine],     [Class],     [Style],     [ProductSubcategoryID],     [ProductModelID],     [SellStartDate],     [SellEndDate],     [DiscontinuedDate],     [rowguid],     [ModifiedDate]FROM Production.ProductSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductByProductID]    @ProductID intASSET NOCOUNT ONSELECT [ProductID],     [Name],     [ProductNumber],     [MakeFlag],     [FinishedGoodsFlag],     [Color],     [SafetyStockLevel],     [ReorderPoint],     [StandardCost],     [ListPrice],     [Size],     [SizeUnitMeasureCode],     [WeightUnitMeasureCode],     [Weight],     [DaysToManufacture],     [ProductLine],     [Class],     [Style],     [ProductSubcategoryID],     [ProductModelID],     [SellStartDate],     [SellEndDate],     [DiscontinuedDate],     [rowguid],     [ModifiedDate]FROM Production.ProductWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProduct]    @ProductID int,    @Name nvarchar(50),    @ProductNumber nvarchar(25),    @MakeFlag bit,    @FinishedGoodsFlag bit,    @Color nvarchar(15),    @SafetyStockLevel smallint,    @ReorderPoint smallint,    @StandardCost money,    @ListPrice money,    @Size nvarchar(5),    @SizeUnitMeasureCode nchar(3),    @WeightUnitMeasureCode nchar(3),    @Weight decimal,    @DaysToManufacture int,    @ProductLine nchar(2),    @Class nchar(2),    @Style nchar(2),    @ProductSubcategoryID int,    @ProductModelID int,    @SellStartDate datetime,    @SellEndDate datetime,    @DiscontinuedDate datetime,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductID = 0 BEGIN    INSERT INTO Production.Product (        [Name],        [ProductNumber],        [MakeFlag],        [FinishedGoodsFlag],        [Color],        [SafetyStockLevel],        [ReorderPoint],        [StandardCost],        [ListPrice],        [Size],        [SizeUnitMeasureCode],        [WeightUnitMeasureCode],        [Weight],        [DaysToManufacture],        [ProductLine],        [Class],        [Style],        [ProductSubcategoryID],        [ProductModelID],        [SellStartDate],        [SellEndDate],        [DiscontinuedDate],        [rowguid],        [ModifiedDate]    )    VALUES (        @Name,        @ProductNumber,        @MakeFlag,        @FinishedGoodsFlag,        @Color,        @SafetyStockLevel,        @ReorderPoint,        @StandardCost,        @ListPrice,        @Size,        @SizeUnitMeasureCode,        @WeightUnitMeasureCode,        @Weight,        @DaysToManufacture,        @ProductLine,        @Class,        @Style,        @ProductSubcategoryID,        @ProductModelID,        @SellStartDate,        @SellEndDate,        @DiscontinuedDate,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.Product SET         [Name] = @Name,        [ProductNumber] = @ProductNumber,        [MakeFlag] = @MakeFlag,        [FinishedGoodsFlag] = @FinishedGoodsFlag,        [Color] = @Color,        [SafetyStockLevel] = @SafetyStockLevel,        [ReorderPoint] = @ReorderPoint,        [StandardCost] = @StandardCost,        [ListPrice] = @ListPrice,        [Size] = @Size,        [SizeUnitMeasureCode] = @SizeUnitMeasureCode,        [WeightUnitMeasureCode] = @WeightUnitMeasureCode,        [Weight] = @Weight,        [DaysToManufacture] = @DaysToManufacture,        [ProductLine] = @ProductLine,        [Class] = @Class,        [Style] = @Style,        [ProductSubcategoryID] = @ProductSubcategoryID,        [ProductModelID] = @ProductModelID,        [SellStartDate] = @SellStartDate,        [SellEndDate] = @SellEndDate,        [DiscontinuedDate] = @DiscontinuedDate,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [ProductID] = @ProductIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductByProductID]    @ProductID intASSET NOCOUNT ONDELETE FROM Production.ProductWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductCategory_ALL]ASSET NOCOUNT ONSELECT [ProductCategoryID],     [Name],     [rowguid],     [ModifiedDate]FROM Production.ProductCategorySET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductCategoryByProductCategoryID]    @ProductCategoryID intASSET NOCOUNT ONSELECT [ProductCategoryID],     [Name],     [rowguid],     [ModifiedDate]FROM Production.ProductCategoryWHERE [ProductCategoryID] = @ProductCategoryIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductCategory]    @ProductCategoryID int,    @Name nvarchar(50),    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductCategoryID = 0 BEGIN    INSERT INTO Production.ProductCategory (        [Name],        [rowguid],        [ModifiedDate]    )    VALUES (        @Name,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductCategory SET         [Name] = @Name,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [ProductCategoryID] = @ProductCategoryIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductCategoryByProductCategoryID]    @ProductCategoryID intASSET NOCOUNT ONDELETE FROM Production.ProductCategoryWHERE [ProductCategoryID] = @ProductCategoryIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductCostHistory_ALL]ASSET NOCOUNT ONSELECT [ProductID],     [StartDate],     [EndDate],     [StandardCost],     [ModifiedDate]FROM Production.ProductCostHistorySET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductCostHistoryByProductCostHistoryID]    @ProductID intASSET NOCOUNT ONSELECT [ProductID],     [StartDate],     [EndDate],     [StandardCost],     [ModifiedDate]FROM Production.ProductCostHistoryWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductCostHistory]    @ProductID int,    @StartDate datetime,    @EndDate datetime,    @StandardCost money,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductID = 0 BEGIN    INSERT INTO Production.ProductCostHistory (        [StartDate],        [EndDate],        [StandardCost],        [ModifiedDate]    )    VALUES (        @StartDate,        @EndDate,        @StandardCost,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductCostHistory SET         [StartDate] = @StartDate,        [EndDate] = @EndDate,        [StandardCost] = @StandardCost,        [ModifiedDate] = @ModifiedDate    WHERE [ProductID] = @ProductIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductCostHistoryByProductCostHistoryID]    @ProductID intASSET NOCOUNT ONDELETE FROM Production.ProductCostHistoryWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductDescription_ALL]ASSET NOCOUNT ONSELECT [ProductDescriptionID],     [Description],     [rowguid],     [ModifiedDate]FROM Production.ProductDescriptionSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductDescriptionByProductDescriptionID]    @ProductDescriptionID intASSET NOCOUNT ONSELECT [ProductDescriptionID],     [Description],     [rowguid],     [ModifiedDate]FROM Production.ProductDescriptionWHERE [ProductDescriptionID] = @ProductDescriptionIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductDescription]    @ProductDescriptionID int,    @Description nvarchar(400),    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductDescriptionID = 0 BEGIN    INSERT INTO Production.ProductDescription (        [Description],        [rowguid],        [ModifiedDate]    )    VALUES (        @Description,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductDescription SET         [Description] = @Description,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [ProductDescriptionID] = @ProductDescriptionIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductDescriptionByProductDescriptionID]    @ProductDescriptionID intASSET NOCOUNT ONDELETE FROM Production.ProductDescriptionWHERE [ProductDescriptionID] = @ProductDescriptionIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductDocument_ALL]ASSET NOCOUNT ONSELECT [ProductID],     [DocumentNode],     [ModifiedDate]FROM Production.ProductDocumentSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductDocumentByProductDocumentID]    @ProductID intASSET NOCOUNT ONSELECT [ProductID],     [DocumentNode],     [ModifiedDate]FROM Production.ProductDocumentWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductDocument]    @ProductID int,    @DocumentNode hierarchyid,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductID = 0 BEGIN    INSERT INTO Production.ProductDocument (        [DocumentNode],        [ModifiedDate]    )    VALUES (        @DocumentNode,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductDocument SET         [DocumentNode] = @DocumentNode,        [ModifiedDate] = @ModifiedDate    WHERE [ProductID] = @ProductIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductDocumentByProductDocumentID]    @ProductID intASSET NOCOUNT ONDELETE FROM Production.ProductDocumentWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductInventory_ALL]ASSET NOCOUNT ONSELECT [ProductID],     [LocationID],     [Shelf],     [Bin],     [Quantity],     [rowguid],     [ModifiedDate]FROM Production.ProductInventorySET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductInventoryByProductInventoryID]    @ProductID intASSET NOCOUNT ONSELECT [ProductID],     [LocationID],     [Shelf],     [Bin],     [Quantity],     [rowguid],     [ModifiedDate]FROM Production.ProductInventoryWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductInventory]    @ProductID int,    @LocationID smallint,    @Shelf nvarchar(10),    @Bin tinyint,    @Quantity smallint,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductID = 0 BEGIN    INSERT INTO Production.ProductInventory (        [LocationID],        [Shelf],        [Bin],        [Quantity],        [rowguid],        [ModifiedDate]    )    VALUES (        @LocationID,        @Shelf,        @Bin,        @Quantity,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductInventory SET         [LocationID] = @LocationID,        [Shelf] = @Shelf,        [Bin] = @Bin,        [Quantity] = @Quantity,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [ProductID] = @ProductIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductInventoryByProductInventoryID]    @ProductID intASSET NOCOUNT ONDELETE FROM Production.ProductInventoryWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductListPriceHistory_ALL]ASSET NOCOUNT ONSELECT [ProductID],     [StartDate],     [EndDate],     [ListPrice],     [ModifiedDate]FROM Production.ProductListPriceHistorySET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductListPriceHistoryByProductListPriceHistoryID]    @ProductID intASSET NOCOUNT ONSELECT [ProductID],     [StartDate],     [EndDate],     [ListPrice],     [ModifiedDate]FROM Production.ProductListPriceHistoryWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductListPriceHistory]    @ProductID int,    @StartDate datetime,    @EndDate datetime,    @ListPrice money,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductID = 0 BEGIN    INSERT INTO Production.ProductListPriceHistory (        [StartDate],        [EndDate],        [ListPrice],        [ModifiedDate]    )    VALUES (        @StartDate,        @EndDate,        @ListPrice,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductListPriceHistory SET         [StartDate] = @StartDate,        [EndDate] = @EndDate,        [ListPrice] = @ListPrice,        [ModifiedDate] = @ModifiedDate    WHERE [ProductID] = @ProductIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductListPriceHistoryByProductListPriceHistoryID]    @ProductID intASSET NOCOUNT ONDELETE FROM Production.ProductListPriceHistoryWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductModel_ALL]ASSET NOCOUNT ONSELECT [ProductModelID],     [Name],     [CatalogDescription],     [Instructions],     [rowguid],     [ModifiedDate]FROM Production.ProductModelSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductModelByProductModelID]    @ProductModelID intASSET NOCOUNT ONSELECT [ProductModelID],     [Name],     [CatalogDescription],     [Instructions],     [rowguid],     [ModifiedDate]FROM Production.ProductModelWHERE [ProductModelID] = @ProductModelIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductModel]    @ProductModelID int,    @Name nvarchar(50),    @CatalogDescription xml,    @Instructions xml,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductModelID = 0 BEGIN    INSERT INTO Production.ProductModel (        [Name],        [CatalogDescription],        [Instructions],        [rowguid],        [ModifiedDate]    )    VALUES (        @Name,        @CatalogDescription,        @Instructions,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductModel SET         [Name] = @Name,        [CatalogDescription] = @CatalogDescription,        [Instructions] = @Instructions,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [ProductModelID] = @ProductModelIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductModelByProductModelID]    @ProductModelID intASSET NOCOUNT ONDELETE FROM Production.ProductModelWHERE [ProductModelID] = @ProductModelIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductModelIllustration_ALL]ASSET NOCOUNT ONSELECT [ProductModelID],     [IllustrationID],     [ModifiedDate]FROM Production.ProductModelIllustrationSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductModelIllustrationByProductModelIllustrationID]    @ProductModelID intASSET NOCOUNT ONSELECT [ProductModelID],     [IllustrationID],     [ModifiedDate]FROM Production.ProductModelIllustrationWHERE [ProductModelID] = @ProductModelIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductModelIllustration]    @ProductModelID int,    @IllustrationID int,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductModelID = 0 BEGIN    INSERT INTO Production.ProductModelIllustration (        [IllustrationID],        [ModifiedDate]    )    VALUES (        @IllustrationID,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductModelIllustration SET         [IllustrationID] = @IllustrationID,        [ModifiedDate] = @ModifiedDate    WHERE [ProductModelID] = @ProductModelIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductModelIllustrationByProductModelIllustrationID]    @ProductModelID intASSET NOCOUNT ONDELETE FROM Production.ProductModelIllustrationWHERE [ProductModelID] = @ProductModelIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductModelProductDescriptionCulture_ALL]ASSET NOCOUNT ONSELECT [ProductModelID],     [ProductDescriptionID],     [CultureID],     [ModifiedDate]FROM Production.ProductModelProductDescriptionCultureSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductModelProductDescriptionCultureByProductModelProductDescriptionCultureID]    @ProductModelID intASSET NOCOUNT ONSELECT [ProductModelID],     [ProductDescriptionID],     [CultureID],     [ModifiedDate]FROM Production.ProductModelProductDescriptionCultureWHERE [ProductModelID] = @ProductModelIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductModelProductDescriptionCulture]    @ProductModelID int,    @ProductDescriptionID int,    @CultureID nchar(6),    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductModelID = 0 BEGIN    INSERT INTO Production.ProductModelProductDescriptionCulture (        [ProductDescriptionID],        [CultureID],        [ModifiedDate]    )    VALUES (        @ProductDescriptionID,        @CultureID,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductModelProductDescriptionCulture SET         [ProductDescriptionID] = @ProductDescriptionID,        [CultureID] = @CultureID,        [ModifiedDate] = @ModifiedDate    WHERE [ProductModelID] = @ProductModelIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductModelProductDescriptionCultureByProductModelProductDescriptionCultureID]    @ProductModelID intASSET NOCOUNT ONDELETE FROM Production.ProductModelProductDescriptionCultureWHERE [ProductModelID] = @ProductModelIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductPhoto_ALL]ASSET NOCOUNT ONSELECT [ProductPhotoID],     [ThumbNailPhoto],     [ThumbnailPhotoFileName],     [LargePhoto],     [LargePhotoFileName],     [ModifiedDate]FROM Production.ProductPhotoSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductPhotoByProductPhotoID]    @ProductPhotoID intASSET NOCOUNT ONSELECT [ProductPhotoID],     [ThumbNailPhoto],     [ThumbnailPhotoFileName],     [LargePhoto],     [LargePhotoFileName],     [ModifiedDate]FROM Production.ProductPhotoWHERE [ProductPhotoID] = @ProductPhotoIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductPhoto]    @ProductPhotoID int,    @ThumbNailPhoto varbinary,    @ThumbnailPhotoFileName nvarchar(50),    @LargePhoto varbinary,    @LargePhotoFileName nvarchar(50),    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductPhotoID = 0 BEGIN    INSERT INTO Production.ProductPhoto (        [ThumbNailPhoto],        [ThumbnailPhotoFileName],        [LargePhoto],        [LargePhotoFileName],        [ModifiedDate]    )    VALUES (        @ThumbNailPhoto,        @ThumbnailPhotoFileName,        @LargePhoto,        @LargePhotoFileName,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductPhoto SET         [ThumbNailPhoto] = @ThumbNailPhoto,        [ThumbnailPhotoFileName] = @ThumbnailPhotoFileName,        [LargePhoto] = @LargePhoto,        [LargePhotoFileName] = @LargePhotoFileName,        [ModifiedDate] = @ModifiedDate    WHERE [ProductPhotoID] = @ProductPhotoIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductPhotoByProductPhotoID]    @ProductPhotoID intASSET NOCOUNT ONDELETE FROM Production.ProductPhotoWHERE [ProductPhotoID] = @ProductPhotoIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductProductPhoto_ALL]ASSET NOCOUNT ONSELECT [ProductID],     [ProductPhotoID],     [Primary],     [ModifiedDate]FROM Production.ProductProductPhotoSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductProductPhotoByProductProductPhotoID]    @ProductID intASSET NOCOUNT ONSELECT [ProductID],     [ProductPhotoID],     [Primary],     [ModifiedDate]FROM Production.ProductProductPhotoWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductProductPhoto]    @ProductID int,    @ProductPhotoID int,    @Primary bit,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductID = 0 BEGIN    INSERT INTO Production.ProductProductPhoto (        [ProductPhotoID],        [Primary],        [ModifiedDate]    )    VALUES (        @ProductPhotoID,        @Primary,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductProductPhoto SET         [ProductPhotoID] = @ProductPhotoID,        [Primary] = @Primary,        [ModifiedDate] = @ModifiedDate    WHERE [ProductID] = @ProductIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductProductPhotoByProductProductPhotoID]    @ProductID intASSET NOCOUNT ONDELETE FROM Production.ProductProductPhotoWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductReview_ALL]ASSET NOCOUNT ONSELECT [ProductReviewID],     [ProductID],     [ReviewerName],     [ReviewDate],     [EmailAddress],     [Rating],     [Comments],     [ModifiedDate]FROM Production.ProductReviewSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductReviewByProductReviewID]    @ProductReviewID intASSET NOCOUNT ONSELECT [ProductReviewID],     [ProductID],     [ReviewerName],     [ReviewDate],     [EmailAddress],     [Rating],     [Comments],     [ModifiedDate]FROM Production.ProductReviewWHERE [ProductReviewID] = @ProductReviewIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductReview]    @ProductReviewID int,    @ProductID int,    @ReviewerName nvarchar(50),    @ReviewDate datetime,    @EmailAddress nvarchar(50),    @Rating int,    @Comments nvarchar(3850),    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductReviewID = 0 BEGIN    INSERT INTO Production.ProductReview (        [ProductID],        [ReviewerName],        [ReviewDate],        [EmailAddress],        [Rating],        [Comments],        [ModifiedDate]    )    VALUES (        @ProductID,        @ReviewerName,        @ReviewDate,        @EmailAddress,        @Rating,        @Comments,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductReview SET         [ProductID] = @ProductID,        [ReviewerName] = @ReviewerName,        [ReviewDate] = @ReviewDate,        [EmailAddress] = @EmailAddress,        [Rating] = @Rating,        [Comments] = @Comments,        [ModifiedDate] = @ModifiedDate    WHERE [ProductReviewID] = @ProductReviewIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductReviewByProductReviewID]    @ProductReviewID intASSET NOCOUNT ONDELETE FROM Production.ProductReviewWHERE [ProductReviewID] = @ProductReviewIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductSubcategory_ALL]ASSET NOCOUNT ONSELECT [ProductSubcategoryID],     [ProductCategoryID],     [Name],     [rowguid],     [ModifiedDate]FROM Production.ProductSubcategorySET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetProductSubcategoryByProductSubcategoryID]    @ProductSubcategoryID intASSET NOCOUNT ONSELECT [ProductSubcategoryID],     [ProductCategoryID],     [Name],     [rowguid],     [ModifiedDate]FROM Production.ProductSubcategoryWHERE [ProductSubcategoryID] = @ProductSubcategoryIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveProductSubcategory]    @ProductSubcategoryID int,    @ProductCategoryID int,    @Name nvarchar(50),    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductSubcategoryID = 0 BEGIN    INSERT INTO Production.ProductSubcategory (        [ProductCategoryID],        [Name],        [rowguid],        [ModifiedDate]    )    VALUES (        @ProductCategoryID,        @Name,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ProductSubcategory SET         [ProductCategoryID] = @ProductCategoryID,        [Name] = @Name,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [ProductSubcategoryID] = @ProductSubcategoryIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveProductSubcategoryByProductSubcategoryID]    @ProductSubcategoryID intASSET NOCOUNT ONDELETE FROM Production.ProductSubcategoryWHERE [ProductSubcategoryID] = @ProductSubcategoryIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[GetProductVendor_ALL]ASSET NOCOUNT ONSELECT [ProductID],     [BusinessEntityID],     [AverageLeadTime],     [StandardPrice],     [LastReceiptCost],     [LastReceiptDate],     [MinOrderQty],     [MaxOrderQty],     [OnOrderQty],     [UnitMeasureCode],     [ModifiedDate]FROM Purchasing.ProductVendorSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[GetProductVendorByProductVendorID]    @ProductID intASSET NOCOUNT ONSELECT [ProductID],     [BusinessEntityID],     [AverageLeadTime],     [StandardPrice],     [LastReceiptCost],     [LastReceiptDate],     [MinOrderQty],     [MaxOrderQty],     [OnOrderQty],     [UnitMeasureCode],     [ModifiedDate]FROM Purchasing.ProductVendorWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[SaveProductVendor]    @ProductID int,    @BusinessEntityID int,    @AverageLeadTime int,    @StandardPrice money,    @LastReceiptCost money,    @LastReceiptDate datetime,    @MinOrderQty int,    @MaxOrderQty int,    @OnOrderQty int,    @UnitMeasureCode nchar(3),    @ModifiedDate datetimeASSET NOCOUNT ONIF @ProductID = 0 BEGIN    INSERT INTO Purchasing.ProductVendor (        [BusinessEntityID],        [AverageLeadTime],        [StandardPrice],        [LastReceiptCost],        [LastReceiptDate],        [MinOrderQty],        [MaxOrderQty],        [OnOrderQty],        [UnitMeasureCode],        [ModifiedDate]    )    VALUES (        @BusinessEntityID,        @AverageLeadTime,        @StandardPrice,        @LastReceiptCost,        @LastReceiptDate,        @MinOrderQty,        @MaxOrderQty,        @OnOrderQty,        @UnitMeasureCode,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Purchasing.ProductVendor SET         [BusinessEntityID] = @BusinessEntityID,        [AverageLeadTime] = @AverageLeadTime,        [StandardPrice] = @StandardPrice,        [LastReceiptCost] = @LastReceiptCost,        [LastReceiptDate] = @LastReceiptDate,        [MinOrderQty] = @MinOrderQty,        [MaxOrderQty] = @MaxOrderQty,        [OnOrderQty] = @OnOrderQty,        [UnitMeasureCode] = @UnitMeasureCode,        [ModifiedDate] = @ModifiedDate    WHERE [ProductID] = @ProductIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[RemoveProductVendorByProductVendorID]    @ProductID intASSET NOCOUNT ONDELETE FROM Purchasing.ProductVendorWHERE [ProductID] = @ProductIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[GetPurchaseOrderDetail_ALL]ASSET NOCOUNT ONSELECT [PurchaseOrderID],     [PurchaseOrderDetailID],     [DueDate],     [OrderQty],     [ProductID],     [UnitPrice],     [LineTotal],     [ReceivedQty],     [RejectedQty],     [StockedQty],     [ModifiedDate]FROM Purchasing.PurchaseOrderDetailSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[GetPurchaseOrderDetailByPurchaseOrderDetailID]    @PurchaseOrderID intASSET NOCOUNT ONSELECT [PurchaseOrderID],     [PurchaseOrderDetailID],     [DueDate],     [OrderQty],     [ProductID],     [UnitPrice],     [LineTotal],     [ReceivedQty],     [RejectedQty],     [StockedQty],     [ModifiedDate]FROM Purchasing.PurchaseOrderDetailWHERE [PurchaseOrderID] = @PurchaseOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[SavePurchaseOrderDetail]    @PurchaseOrderID int,    @PurchaseOrderDetailID int,    @DueDate datetime,    @OrderQty smallint,    @ProductID int,    @UnitPrice money,    @LineTotal money,    @ReceivedQty decimal,    @RejectedQty decimal,    @StockedQty decimal,    @ModifiedDate datetimeASSET NOCOUNT ONIF @PurchaseOrderID = 0 BEGIN    INSERT INTO Purchasing.PurchaseOrderDetail (        [PurchaseOrderDetailID],        [DueDate],        [OrderQty],        [ProductID],        [UnitPrice],        [LineTotal],        [ReceivedQty],        [RejectedQty],        [StockedQty],        [ModifiedDate]    )    VALUES (        @PurchaseOrderDetailID,        @DueDate,        @OrderQty,        @ProductID,        @UnitPrice,        @LineTotal,        @ReceivedQty,        @RejectedQty,        @StockedQty,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Purchasing.PurchaseOrderDetail SET         [PurchaseOrderDetailID] = @PurchaseOrderDetailID,        [DueDate] = @DueDate,        [OrderQty] = @OrderQty,        [ProductID] = @ProductID,        [UnitPrice] = @UnitPrice,        [LineTotal] = @LineTotal,        [ReceivedQty] = @ReceivedQty,        [RejectedQty] = @RejectedQty,        [StockedQty] = @StockedQty,        [ModifiedDate] = @ModifiedDate    WHERE [PurchaseOrderID] = @PurchaseOrderIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[RemovePurchaseOrderDetailByPurchaseOrderDetailID]    @PurchaseOrderID intASSET NOCOUNT ONDELETE FROM Purchasing.PurchaseOrderDetailWHERE [PurchaseOrderID] = @PurchaseOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[GetPurchaseOrderHeader_ALL]ASSET NOCOUNT ONSELECT [PurchaseOrderID],     [RevisionNumber],     [Status],     [EmployeeID],     [VendorID],     [ShipMethodID],     [OrderDate],     [ShipDate],     [SubTotal],     [TaxAmt],     [Freight],     [TotalDue],     [ModifiedDate]FROM Purchasing.PurchaseOrderHeaderSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[GetPurchaseOrderHeaderByPurchaseOrderHeaderID]    @PurchaseOrderID intASSET NOCOUNT ONSELECT [PurchaseOrderID],     [RevisionNumber],     [Status],     [EmployeeID],     [VendorID],     [ShipMethodID],     [OrderDate],     [ShipDate],     [SubTotal],     [TaxAmt],     [Freight],     [TotalDue],     [ModifiedDate]FROM Purchasing.PurchaseOrderHeaderWHERE [PurchaseOrderID] = @PurchaseOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[SavePurchaseOrderHeader]    @PurchaseOrderID int,    @RevisionNumber tinyint,    @Status tinyint,    @EmployeeID int,    @VendorID int,    @ShipMethodID int,    @OrderDate datetime,    @ShipDate datetime,    @SubTotal money,    @TaxAmt money,    @Freight money,    @TotalDue money,    @ModifiedDate datetimeASSET NOCOUNT ONIF @PurchaseOrderID = 0 BEGIN    INSERT INTO Purchasing.PurchaseOrderHeader (        [RevisionNumber],        [Status],        [EmployeeID],        [VendorID],        [ShipMethodID],        [OrderDate],        [ShipDate],        [SubTotal],        [TaxAmt],        [Freight],        [TotalDue],        [ModifiedDate]    )    VALUES (        @RevisionNumber,        @Status,        @EmployeeID,        @VendorID,        @ShipMethodID,        @OrderDate,        @ShipDate,        @SubTotal,        @TaxAmt,        @Freight,        @TotalDue,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Purchasing.PurchaseOrderHeader SET         [RevisionNumber] = @RevisionNumber,        [Status] = @Status,        [EmployeeID] = @EmployeeID,        [VendorID] = @VendorID,        [ShipMethodID] = @ShipMethodID,        [OrderDate] = @OrderDate,        [ShipDate] = @ShipDate,        [SubTotal] = @SubTotal,        [TaxAmt] = @TaxAmt,        [Freight] = @Freight,        [TotalDue] = @TotalDue,        [ModifiedDate] = @ModifiedDate    WHERE [PurchaseOrderID] = @PurchaseOrderIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[RemovePurchaseOrderHeaderByPurchaseOrderHeaderID]    @PurchaseOrderID intASSET NOCOUNT ONDELETE FROM Purchasing.PurchaseOrderHeaderWHERE [PurchaseOrderID] = @PurchaseOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesOrderDetail_ALL]ASSET NOCOUNT ONSELECT [SalesOrderID],     [SalesOrderDetailID],     [CarrierTrackingNumber],     [OrderQty],     [ProductID],     [SpecialOfferID],     [UnitPrice],     [UnitPriceDiscount],     [LineTotal],     [rowguid],     [ModifiedDate]FROM Sales.SalesOrderDetailSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesOrderDetailBySalesOrderDetailID]    @SalesOrderID intASSET NOCOUNT ONSELECT [SalesOrderID],     [SalesOrderDetailID],     [CarrierTrackingNumber],     [OrderQty],     [ProductID],     [SpecialOfferID],     [UnitPrice],     [UnitPriceDiscount],     [LineTotal],     [rowguid],     [ModifiedDate]FROM Sales.SalesOrderDetailWHERE [SalesOrderID] = @SalesOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSalesOrderDetail]    @SalesOrderID int,    @SalesOrderDetailID int,    @CarrierTrackingNumber nvarchar(25),    @OrderQty smallint,    @ProductID int,    @SpecialOfferID int,    @UnitPrice money,    @UnitPriceDiscount money,    @LineTotal numeric,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @SalesOrderID = 0 BEGIN    INSERT INTO Sales.SalesOrderDetail (        [SalesOrderDetailID],        [CarrierTrackingNumber],        [OrderQty],        [ProductID],        [SpecialOfferID],        [UnitPrice],        [UnitPriceDiscount],        [LineTotal],        [rowguid],        [ModifiedDate]    )    VALUES (        @SalesOrderDetailID,        @CarrierTrackingNumber,        @OrderQty,        @ProductID,        @SpecialOfferID,        @UnitPrice,        @UnitPriceDiscount,        @LineTotal,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SalesOrderDetail SET         [SalesOrderDetailID] = @SalesOrderDetailID,        [CarrierTrackingNumber] = @CarrierTrackingNumber,        [OrderQty] = @OrderQty,        [ProductID] = @ProductID,        [SpecialOfferID] = @SpecialOfferID,        [UnitPrice] = @UnitPrice,        [UnitPriceDiscount] = @UnitPriceDiscount,        [LineTotal] = @LineTotal,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [SalesOrderID] = @SalesOrderIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSalesOrderDetailBySalesOrderDetailID]    @SalesOrderID intASSET NOCOUNT ONDELETE FROM Sales.SalesOrderDetailWHERE [SalesOrderID] = @SalesOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesOrderHeader_ALL]ASSET NOCOUNT ONSELECT [SalesOrderID],     [RevisionNumber],     [OrderDate],     [DueDate],     [ShipDate],     [Status],     [OnlineOrderFlag],     [SalesOrderNumber],     [PurchaseOrderNumber],     [AccountNumber],     [CustomerID],     [SalesPersonID],     [TerritoryID],     [BillToAddressID],     [ShipToAddressID],     [ShipMethodID],     [CreditCardID],     [CreditCardApprovalCode],     [CurrencyRateID],     [SubTotal],     [TaxAmt],     [Freight],     [TotalDue],     [Comment],     [rowguid],     [ModifiedDate]FROM Sales.SalesOrderHeaderSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesOrderHeaderBySalesOrderHeaderID]    @SalesOrderID intASSET NOCOUNT ONSELECT [SalesOrderID],     [RevisionNumber],     [OrderDate],     [DueDate],     [ShipDate],     [Status],     [OnlineOrderFlag],     [SalesOrderNumber],     [PurchaseOrderNumber],     [AccountNumber],     [CustomerID],     [SalesPersonID],     [TerritoryID],     [BillToAddressID],     [ShipToAddressID],     [ShipMethodID],     [CreditCardID],     [CreditCardApprovalCode],     [CurrencyRateID],     [SubTotal],     [TaxAmt],     [Freight],     [TotalDue],     [Comment],     [rowguid],     [ModifiedDate]FROM Sales.SalesOrderHeaderWHERE [SalesOrderID] = @SalesOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSalesOrderHeader]    @SalesOrderID int,    @RevisionNumber tinyint,    @OrderDate datetime,    @DueDate datetime,    @ShipDate datetime,    @Status tinyint,    @OnlineOrderFlag bit,    @SalesOrderNumber nvarchar(25),    @PurchaseOrderNumber nvarchar(25),    @AccountNumber nvarchar(15),    @CustomerID int,    @SalesPersonID int,    @TerritoryID int,    @BillToAddressID int,    @ShipToAddressID int,    @ShipMethodID int,    @CreditCardID int,    @CreditCardApprovalCode varchar(15),    @CurrencyRateID int,    @SubTotal money,    @TaxAmt money,    @Freight money,    @TotalDue money,    @Comment nvarchar(128),    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @SalesOrderID = 0 BEGIN    INSERT INTO Sales.SalesOrderHeader (        [RevisionNumber],        [OrderDate],        [DueDate],        [ShipDate],        [Status],        [OnlineOrderFlag],        [SalesOrderNumber],        [PurchaseOrderNumber],        [AccountNumber],        [CustomerID],        [SalesPersonID],        [TerritoryID],        [BillToAddressID],        [ShipToAddressID],        [ShipMethodID],        [CreditCardID],        [CreditCardApprovalCode],        [CurrencyRateID],        [SubTotal],        [TaxAmt],        [Freight],        [TotalDue],        [Comment],        [rowguid],        [ModifiedDate]    )    VALUES (        @RevisionNumber,        @OrderDate,        @DueDate,        @ShipDate,        @Status,        @OnlineOrderFlag,        @SalesOrderNumber,        @PurchaseOrderNumber,        @AccountNumber,        @CustomerID,        @SalesPersonID,        @TerritoryID,        @BillToAddressID,        @ShipToAddressID,        @ShipMethodID,        @CreditCardID,        @CreditCardApprovalCode,        @CurrencyRateID,        @SubTotal,        @TaxAmt,        @Freight,        @TotalDue,        @Comment,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SalesOrderHeader SET         [RevisionNumber] = @RevisionNumber,        [OrderDate] = @OrderDate,        [DueDate] = @DueDate,        [ShipDate] = @ShipDate,        [Status] = @Status,        [OnlineOrderFlag] = @OnlineOrderFlag,        [SalesOrderNumber] = @SalesOrderNumber,        [PurchaseOrderNumber] = @PurchaseOrderNumber,        [AccountNumber] = @AccountNumber,        [CustomerID] = @CustomerID,        [SalesPersonID] = @SalesPersonID,        [TerritoryID] = @TerritoryID,        [BillToAddressID] = @BillToAddressID,        [ShipToAddressID] = @ShipToAddressID,        [ShipMethodID] = @ShipMethodID,        [CreditCardID] = @CreditCardID,        [CreditCardApprovalCode] = @CreditCardApprovalCode,        [CurrencyRateID] = @CurrencyRateID,        [SubTotal] = @SubTotal,        [TaxAmt] = @TaxAmt,        [Freight] = @Freight,        [TotalDue] = @TotalDue,        [Comment] = @Comment,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [SalesOrderID] = @SalesOrderIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSalesOrderHeaderBySalesOrderHeaderID]    @SalesOrderID intASSET NOCOUNT ONDELETE FROM Sales.SalesOrderHeaderWHERE [SalesOrderID] = @SalesOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesOrderHeaderSalesReason_ALL]ASSET NOCOUNT ONSELECT [SalesOrderID],     [SalesReasonID],     [ModifiedDate]FROM Sales.SalesOrderHeaderSalesReasonSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesOrderHeaderSalesReasonBySalesOrderHeaderSalesReasonID]    @SalesOrderID intASSET NOCOUNT ONSELECT [SalesOrderID],     [SalesReasonID],     [ModifiedDate]FROM Sales.SalesOrderHeaderSalesReasonWHERE [SalesOrderID] = @SalesOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSalesOrderHeaderSalesReason]    @SalesOrderID int,    @SalesReasonID int,    @ModifiedDate datetimeASSET NOCOUNT ONIF @SalesOrderID = 0 BEGIN    INSERT INTO Sales.SalesOrderHeaderSalesReason (        [SalesReasonID],        [ModifiedDate]    )    VALUES (        @SalesReasonID,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SalesOrderHeaderSalesReason SET         [SalesReasonID] = @SalesReasonID,        [ModifiedDate] = @ModifiedDate    WHERE [SalesOrderID] = @SalesOrderIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSalesOrderHeaderSalesReasonBySalesOrderHeaderSalesReasonID]    @SalesOrderID intASSET NOCOUNT ONDELETE FROM Sales.SalesOrderHeaderSalesReasonWHERE [SalesOrderID] = @SalesOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesPerson_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [TerritoryID],     [SalesQuota],     [Bonus],     [CommissionPct],     [SalesYTD],     [SalesLastYear],     [rowguid],     [ModifiedDate]FROM Sales.SalesPersonSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesPersonBySalesPersonID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [TerritoryID],     [SalesQuota],     [Bonus],     [CommissionPct],     [SalesYTD],     [SalesLastYear],     [rowguid],     [ModifiedDate]FROM Sales.SalesPersonWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSalesPerson]    @BusinessEntityID int,    @TerritoryID int,    @SalesQuota money,    @Bonus money,    @CommissionPct smallmoney,    @SalesYTD money,    @SalesLastYear money,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Sales.SalesPerson (        [TerritoryID],        [SalesQuota],        [Bonus],        [CommissionPct],        [SalesYTD],        [SalesLastYear],        [rowguid],        [ModifiedDate]    )    VALUES (        @TerritoryID,        @SalesQuota,        @Bonus,        @CommissionPct,        @SalesYTD,        @SalesLastYear,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SalesPerson SET         [TerritoryID] = @TerritoryID,        [SalesQuota] = @SalesQuota,        [Bonus] = @Bonus,        [CommissionPct] = @CommissionPct,        [SalesYTD] = @SalesYTD,        [SalesLastYear] = @SalesLastYear,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSalesPersonBySalesPersonID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Sales.SalesPersonWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesPersonQuotaHistory_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [QuotaDate],     [SalesQuota],     [rowguid],     [ModifiedDate]FROM Sales.SalesPersonQuotaHistorySET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesPersonQuotaHistoryBySalesPersonQuotaHistoryID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [QuotaDate],     [SalesQuota],     [rowguid],     [ModifiedDate]FROM Sales.SalesPersonQuotaHistoryWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSalesPersonQuotaHistory]    @BusinessEntityID int,    @QuotaDate datetime,    @SalesQuota money,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Sales.SalesPersonQuotaHistory (        [QuotaDate],        [SalesQuota],        [rowguid],        [ModifiedDate]    )    VALUES (        @QuotaDate,        @SalesQuota,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SalesPersonQuotaHistory SET         [QuotaDate] = @QuotaDate,        [SalesQuota] = @SalesQuota,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSalesPersonQuotaHistoryBySalesPersonQuotaHistoryID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Sales.SalesPersonQuotaHistoryWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesReason_ALL]ASSET NOCOUNT ONSELECT [SalesReasonID],     [Name],     [ReasonType],     [ModifiedDate]FROM Sales.SalesReasonSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesReasonBySalesReasonID]    @SalesReasonID intASSET NOCOUNT ONSELECT [SalesReasonID],     [Name],     [ReasonType],     [ModifiedDate]FROM Sales.SalesReasonWHERE [SalesReasonID] = @SalesReasonIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSalesReason]    @SalesReasonID int,    @Name nvarchar(50),    @ReasonType nvarchar(50),    @ModifiedDate datetimeASSET NOCOUNT ONIF @SalesReasonID = 0 BEGIN    INSERT INTO Sales.SalesReason (        [Name],        [ReasonType],        [ModifiedDate]    )    VALUES (        @Name,        @ReasonType,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SalesReason SET         [Name] = @Name,        [ReasonType] = @ReasonType,        [ModifiedDate] = @ModifiedDate    WHERE [SalesReasonID] = @SalesReasonIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSalesReasonBySalesReasonID]    @SalesReasonID intASSET NOCOUNT ONDELETE FROM Sales.SalesReasonWHERE [SalesReasonID] = @SalesReasonIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesTaxRate_ALL]ASSET NOCOUNT ONSELECT [SalesTaxRateID],     [StateProvinceID],     [TaxType],     [TaxRate],     [Name],     [rowguid],     [ModifiedDate]FROM Sales.SalesTaxRateSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesTaxRateBySalesTaxRateID]    @SalesTaxRateID intASSET NOCOUNT ONSELECT [SalesTaxRateID],     [StateProvinceID],     [TaxType],     [TaxRate],     [Name],     [rowguid],     [ModifiedDate]FROM Sales.SalesTaxRateWHERE [SalesTaxRateID] = @SalesTaxRateIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSalesTaxRate]    @SalesTaxRateID int,    @StateProvinceID int,    @TaxType tinyint,    @TaxRate smallmoney,    @Name nvarchar(50),    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @SalesTaxRateID = 0 BEGIN    INSERT INTO Sales.SalesTaxRate (        [StateProvinceID],        [TaxType],        [TaxRate],        [Name],        [rowguid],        [ModifiedDate]    )    VALUES (        @StateProvinceID,        @TaxType,        @TaxRate,        @Name,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SalesTaxRate SET         [StateProvinceID] = @StateProvinceID,        [TaxType] = @TaxType,        [TaxRate] = @TaxRate,        [Name] = @Name,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [SalesTaxRateID] = @SalesTaxRateIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSalesTaxRateBySalesTaxRateID]    @SalesTaxRateID intASSET NOCOUNT ONDELETE FROM Sales.SalesTaxRateWHERE [SalesTaxRateID] = @SalesTaxRateIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesTerritory_ALL]ASSET NOCOUNT ONSELECT [TerritoryID],     [Name],     [CountryRegionCode],     [Group],     [SalesYTD],     [SalesLastYear],     [CostYTD],     [CostLastYear],     [rowguid],     [ModifiedDate]FROM Sales.SalesTerritorySET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesTerritoryBySalesTerritoryID]    @TerritoryID intASSET NOCOUNT ONSELECT [TerritoryID],     [Name],     [CountryRegionCode],     [Group],     [SalesYTD],     [SalesLastYear],     [CostYTD],     [CostLastYear],     [rowguid],     [ModifiedDate]FROM Sales.SalesTerritoryWHERE [TerritoryID] = @TerritoryIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSalesTerritory]    @TerritoryID int,    @Name nvarchar(50),    @CountryRegionCode nvarchar(3),    @Group nvarchar(50),    @SalesYTD money,    @SalesLastYear money,    @CostYTD money,    @CostLastYear money,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @TerritoryID = 0 BEGIN    INSERT INTO Sales.SalesTerritory (        [Name],        [CountryRegionCode],        [Group],        [SalesYTD],        [SalesLastYear],        [CostYTD],        [CostLastYear],        [rowguid],        [ModifiedDate]    )    VALUES (        @Name,        @CountryRegionCode,        @Group,        @SalesYTD,        @SalesLastYear,        @CostYTD,        @CostLastYear,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SalesTerritory SET         [Name] = @Name,        [CountryRegionCode] = @CountryRegionCode,        [Group] = @Group,        [SalesYTD] = @SalesYTD,        [SalesLastYear] = @SalesLastYear,        [CostYTD] = @CostYTD,        [CostLastYear] = @CostLastYear,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [TerritoryID] = @TerritoryIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSalesTerritoryBySalesTerritoryID]    @TerritoryID intASSET NOCOUNT ONDELETE FROM Sales.SalesTerritoryWHERE [TerritoryID] = @TerritoryIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesTerritoryHistory_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [TerritoryID],     [StartDate],     [EndDate],     [rowguid],     [ModifiedDate]FROM Sales.SalesTerritoryHistorySET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSalesTerritoryHistoryBySalesTerritoryHistoryID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [TerritoryID],     [StartDate],     [EndDate],     [rowguid],     [ModifiedDate]FROM Sales.SalesTerritoryHistoryWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSalesTerritoryHistory]    @BusinessEntityID int,    @TerritoryID int,    @StartDate datetime,    @EndDate datetime,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Sales.SalesTerritoryHistory (        [TerritoryID],        [StartDate],        [EndDate],        [rowguid],        [ModifiedDate]    )    VALUES (        @TerritoryID,        @StartDate,        @EndDate,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SalesTerritoryHistory SET         [TerritoryID] = @TerritoryID,        [StartDate] = @StartDate,        [EndDate] = @EndDate,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSalesTerritoryHistoryBySalesTerritoryHistoryID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Sales.SalesTerritoryHistoryWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetScrapReason_ALL]ASSET NOCOUNT ONSELECT [ScrapReasonID],     [Name],     [ModifiedDate]FROM Production.ScrapReasonSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetScrapReasonByScrapReasonID]    @ScrapReasonID smallintASSET NOCOUNT ONSELECT [ScrapReasonID],     [Name],     [ModifiedDate]FROM Production.ScrapReasonWHERE [ScrapReasonID] = @ScrapReasonIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveScrapReason]    @ScrapReasonID smallint,    @Name nvarchar(50),    @ModifiedDate datetimeASSET NOCOUNT ONIF @ScrapReasonID = 0 BEGIN    INSERT INTO Production.ScrapReason (        [Name],        [ModifiedDate]    )    VALUES (        @Name,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.ScrapReason SET         [Name] = @Name,        [ModifiedDate] = @ModifiedDate    WHERE [ScrapReasonID] = @ScrapReasonIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveScrapReasonByScrapReasonID]    @ScrapReasonID smallintASSET NOCOUNT ONDELETE FROM Production.ScrapReasonWHERE [ScrapReasonID] = @ScrapReasonIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetShift_ALL]ASSET NOCOUNT ONSELECT [ShiftID],     [Name],     [StartTime],     [EndTime],     [ModifiedDate]FROM HumanResources.ShiftSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[GetShiftByShiftID]    @ShiftID tinyintASSET NOCOUNT ONSELECT [ShiftID],     [Name],     [StartTime],     [EndTime],     [ModifiedDate]FROM HumanResources.ShiftWHERE [ShiftID] = @ShiftIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[SaveShift]    @ShiftID tinyint,    @Name nvarchar(50),    @StartTime time,    @EndTime time,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ShiftID = 0 BEGIN    INSERT INTO HumanResources.Shift (        [Name],        [StartTime],        [EndTime],        [ModifiedDate]    )    VALUES (        @Name,        @StartTime,        @EndTime,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE HumanResources.Shift SET         [Name] = @Name,        [StartTime] = @StartTime,        [EndTime] = @EndTime,        [ModifiedDate] = @ModifiedDate    WHERE [ShiftID] = @ShiftIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [HumanResources].[RemoveShiftByShiftID]    @ShiftID tinyintASSET NOCOUNT ONDELETE FROM HumanResources.ShiftWHERE [ShiftID] = @ShiftIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[GetShipMethod_ALL]ASSET NOCOUNT ONSELECT [ShipMethodID],     [Name],     [ShipBase],     [ShipRate],     [rowguid],     [ModifiedDate]FROM Purchasing.ShipMethodSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[GetShipMethodByShipMethodID]    @ShipMethodID intASSET NOCOUNT ONSELECT [ShipMethodID],     [Name],     [ShipBase],     [ShipRate],     [rowguid],     [ModifiedDate]FROM Purchasing.ShipMethodWHERE [ShipMethodID] = @ShipMethodIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[SaveShipMethod]    @ShipMethodID int,    @Name nvarchar(50),    @ShipBase money,    @ShipRate money,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ShipMethodID = 0 BEGIN    INSERT INTO Purchasing.ShipMethod (        [Name],        [ShipBase],        [ShipRate],        [rowguid],        [ModifiedDate]    )    VALUES (        @Name,        @ShipBase,        @ShipRate,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Purchasing.ShipMethod SET         [Name] = @Name,        [ShipBase] = @ShipBase,        [ShipRate] = @ShipRate,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [ShipMethodID] = @ShipMethodIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[RemoveShipMethodByShipMethodID]    @ShipMethodID intASSET NOCOUNT ONDELETE FROM Purchasing.ShipMethodWHERE [ShipMethodID] = @ShipMethodIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetShoppingCartItem_ALL]ASSET NOCOUNT ONSELECT [ShoppingCartItemID],     [ShoppingCartID],     [Quantity],     [ProductID],     [DateCreated],     [ModifiedDate]FROM Sales.ShoppingCartItemSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetShoppingCartItemByShoppingCartItemID]    @ShoppingCartItemID intASSET NOCOUNT ONSELECT [ShoppingCartItemID],     [ShoppingCartID],     [Quantity],     [ProductID],     [DateCreated],     [ModifiedDate]FROM Sales.ShoppingCartItemWHERE [ShoppingCartItemID] = @ShoppingCartItemIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveShoppingCartItem]    @ShoppingCartItemID int,    @ShoppingCartID nvarchar(50),    @Quantity int,    @ProductID int,    @DateCreated datetime,    @ModifiedDate datetimeASSET NOCOUNT ONIF @ShoppingCartItemID = 0 BEGIN    INSERT INTO Sales.ShoppingCartItem (        [ShoppingCartID],        [Quantity],        [ProductID],        [DateCreated],        [ModifiedDate]    )    VALUES (        @ShoppingCartID,        @Quantity,        @ProductID,        @DateCreated,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.ShoppingCartItem SET         [ShoppingCartID] = @ShoppingCartID,        [Quantity] = @Quantity,        [ProductID] = @ProductID,        [DateCreated] = @DateCreated,        [ModifiedDate] = @ModifiedDate    WHERE [ShoppingCartItemID] = @ShoppingCartItemIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveShoppingCartItemByShoppingCartItemID]    @ShoppingCartItemID intASSET NOCOUNT ONDELETE FROM Sales.ShoppingCartItemWHERE [ShoppingCartItemID] = @ShoppingCartItemIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSpecialOffer_ALL]ASSET NOCOUNT ONSELECT [SpecialOfferID],     [Description],     [DiscountPct],     [Type],     [Category],     [StartDate],     [EndDate],     [MinQty],     [MaxQty],     [rowguid],     [ModifiedDate]FROM Sales.SpecialOfferSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSpecialOfferBySpecialOfferID]    @SpecialOfferID intASSET NOCOUNT ONSELECT [SpecialOfferID],     [Description],     [DiscountPct],     [Type],     [Category],     [StartDate],     [EndDate],     [MinQty],     [MaxQty],     [rowguid],     [ModifiedDate]FROM Sales.SpecialOfferWHERE [SpecialOfferID] = @SpecialOfferIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSpecialOffer]    @SpecialOfferID int,    @Description nvarchar(255),    @DiscountPct smallmoney,    @Type nvarchar(50),    @Category nvarchar(50),    @StartDate datetime,    @EndDate datetime,    @MinQty int,    @MaxQty int,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @SpecialOfferID = 0 BEGIN    INSERT INTO Sales.SpecialOffer (        [Description],        [DiscountPct],        [Type],        [Category],        [StartDate],        [EndDate],        [MinQty],        [MaxQty],        [rowguid],        [ModifiedDate]    )    VALUES (        @Description,        @DiscountPct,        @Type,        @Category,        @StartDate,        @EndDate,        @MinQty,        @MaxQty,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SpecialOffer SET         [Description] = @Description,        [DiscountPct] = @DiscountPct,        [Type] = @Type,        [Category] = @Category,        [StartDate] = @StartDate,        [EndDate] = @EndDate,        [MinQty] = @MinQty,        [MaxQty] = @MaxQty,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [SpecialOfferID] = @SpecialOfferIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSpecialOfferBySpecialOfferID]    @SpecialOfferID intASSET NOCOUNT ONDELETE FROM Sales.SpecialOfferWHERE [SpecialOfferID] = @SpecialOfferIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSpecialOfferProduct_ALL]ASSET NOCOUNT ONSELECT [SpecialOfferID],     [ProductID],     [rowguid],     [ModifiedDate]FROM Sales.SpecialOfferProductSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetSpecialOfferProductBySpecialOfferProductID]    @SpecialOfferID intASSET NOCOUNT ONSELECT [SpecialOfferID],     [ProductID],     [rowguid],     [ModifiedDate]FROM Sales.SpecialOfferProductWHERE [SpecialOfferID] = @SpecialOfferIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveSpecialOfferProduct]    @SpecialOfferID int,    @ProductID int,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @SpecialOfferID = 0 BEGIN    INSERT INTO Sales.SpecialOfferProduct (        [ProductID],        [rowguid],        [ModifiedDate]    )    VALUES (        @ProductID,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.SpecialOfferProduct SET         [ProductID] = @ProductID,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [SpecialOfferID] = @SpecialOfferIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveSpecialOfferProductBySpecialOfferProductID]    @SpecialOfferID intASSET NOCOUNT ONDELETE FROM Sales.SpecialOfferProductWHERE [SpecialOfferID] = @SpecialOfferIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetStateProvince_ALL]ASSET NOCOUNT ONSELECT [StateProvinceID],     [StateProvinceCode],     [CountryRegionCode],     [IsOnlyStateProvinceFlag],     [Name],     [TerritoryID],     [rowguid],     [ModifiedDate]FROM Person.StateProvinceSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[GetStateProvinceByStateProvinceID]    @StateProvinceID intASSET NOCOUNT ONSELECT [StateProvinceID],     [StateProvinceCode],     [CountryRegionCode],     [IsOnlyStateProvinceFlag],     [Name],     [TerritoryID],     [rowguid],     [ModifiedDate]FROM Person.StateProvinceWHERE [StateProvinceID] = @StateProvinceIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[SaveStateProvince]    @StateProvinceID int,    @StateProvinceCode nchar(3),    @CountryRegionCode nvarchar(3),    @IsOnlyStateProvinceFlag bit,    @Name nvarchar(50),    @TerritoryID int,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @StateProvinceID = 0 BEGIN    INSERT INTO Person.StateProvince (        [StateProvinceCode],        [CountryRegionCode],        [IsOnlyStateProvinceFlag],        [Name],        [TerritoryID],        [rowguid],        [ModifiedDate]    )    VALUES (        @StateProvinceCode,        @CountryRegionCode,        @IsOnlyStateProvinceFlag,        @Name,        @TerritoryID,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Person.StateProvince SET         [StateProvinceCode] = @StateProvinceCode,        [CountryRegionCode] = @CountryRegionCode,        [IsOnlyStateProvinceFlag] = @IsOnlyStateProvinceFlag,        [Name] = @Name,        [TerritoryID] = @TerritoryID,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [StateProvinceID] = @StateProvinceIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Person].[RemoveStateProvinceByStateProvinceID]    @StateProvinceID intASSET NOCOUNT ONDELETE FROM Person.StateProvinceWHERE [StateProvinceID] = @StateProvinceIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetStore_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [Name],     [SalesPersonID],     [Demographics],     [rowguid],     [ModifiedDate]FROM Sales.StoreSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[GetStoreByStoreID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [Name],     [SalesPersonID],     [Demographics],     [rowguid],     [ModifiedDate]FROM Sales.StoreWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[SaveStore]    @BusinessEntityID int,    @Name nvarchar(50),    @SalesPersonID int,    @Demographics xml,    @rowguid uniqueidentifier,    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Sales.Store (        [Name],        [SalesPersonID],        [Demographics],        [rowguid],        [ModifiedDate]    )    VALUES (        @Name,        @SalesPersonID,        @Demographics,        @rowguid,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Sales.Store SET         [Name] = @Name,        [SalesPersonID] = @SalesPersonID,        [Demographics] = @Demographics,        [rowguid] = @rowguid,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Sales].[RemoveStoreByStoreID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Sales.StoreWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetTransactionHistory_ALL]ASSET NOCOUNT ONSELECT [TransactionID],     [ProductID],     [ReferenceOrderID],     [ReferenceOrderLineID],     [TransactionDate],     [TransactionType],     [Quantity],     [ActualCost],     [ModifiedDate]FROM Production.TransactionHistorySET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetTransactionHistoryByTransactionHistoryID]    @TransactionID intASSET NOCOUNT ONSELECT [TransactionID],     [ProductID],     [ReferenceOrderID],     [ReferenceOrderLineID],     [TransactionDate],     [TransactionType],     [Quantity],     [ActualCost],     [ModifiedDate]FROM Production.TransactionHistoryWHERE [TransactionID] = @TransactionIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveTransactionHistory]    @TransactionID int,    @ProductID int,    @ReferenceOrderID int,    @ReferenceOrderLineID int,    @TransactionDate datetime,    @TransactionType nchar(1),    @Quantity int,    @ActualCost money,    @ModifiedDate datetimeASSET NOCOUNT ONIF @TransactionID = 0 BEGIN    INSERT INTO Production.TransactionHistory (        [ProductID],        [ReferenceOrderID],        [ReferenceOrderLineID],        [TransactionDate],        [TransactionType],        [Quantity],        [ActualCost],        [ModifiedDate]    )    VALUES (        @ProductID,        @ReferenceOrderID,        @ReferenceOrderLineID,        @TransactionDate,        @TransactionType,        @Quantity,        @ActualCost,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.TransactionHistory SET         [ProductID] = @ProductID,        [ReferenceOrderID] = @ReferenceOrderID,        [ReferenceOrderLineID] = @ReferenceOrderLineID,        [TransactionDate] = @TransactionDate,        [TransactionType] = @TransactionType,        [Quantity] = @Quantity,        [ActualCost] = @ActualCost,        [ModifiedDate] = @ModifiedDate    WHERE [TransactionID] = @TransactionIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveTransactionHistoryByTransactionHistoryID]    @TransactionID intASSET NOCOUNT ONDELETE FROM Production.TransactionHistoryWHERE [TransactionID] = @TransactionIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetTransactionHistoryArchive_ALL]ASSET NOCOUNT ONSELECT [TransactionID],     [ProductID],     [ReferenceOrderID],     [ReferenceOrderLineID],     [TransactionDate],     [TransactionType],     [Quantity],     [ActualCost],     [ModifiedDate]FROM Production.TransactionHistoryArchiveSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetTransactionHistoryArchiveByTransactionHistoryArchiveID]    @TransactionID intASSET NOCOUNT ONSELECT [TransactionID],     [ProductID],     [ReferenceOrderID],     [ReferenceOrderLineID],     [TransactionDate],     [TransactionType],     [Quantity],     [ActualCost],     [ModifiedDate]FROM Production.TransactionHistoryArchiveWHERE [TransactionID] = @TransactionIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveTransactionHistoryArchive]    @TransactionID int,    @ProductID int,    @ReferenceOrderID int,    @ReferenceOrderLineID int,    @TransactionDate datetime,    @TransactionType nchar(1),    @Quantity int,    @ActualCost money,    @ModifiedDate datetimeASSET NOCOUNT ONIF @TransactionID = 0 BEGIN    INSERT INTO Production.TransactionHistoryArchive (        [ProductID],        [ReferenceOrderID],        [ReferenceOrderLineID],        [TransactionDate],        [TransactionType],        [Quantity],        [ActualCost],        [ModifiedDate]    )    VALUES (        @ProductID,        @ReferenceOrderID,        @ReferenceOrderLineID,        @TransactionDate,        @TransactionType,        @Quantity,        @ActualCost,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.TransactionHistoryArchive SET         [ProductID] = @ProductID,        [ReferenceOrderID] = @ReferenceOrderID,        [ReferenceOrderLineID] = @ReferenceOrderLineID,        [TransactionDate] = @TransactionDate,        [TransactionType] = @TransactionType,        [Quantity] = @Quantity,        [ActualCost] = @ActualCost,        [ModifiedDate] = @ModifiedDate    WHERE [TransactionID] = @TransactionIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveTransactionHistoryArchiveByTransactionHistoryArchiveID]    @TransactionID intASSET NOCOUNT ONDELETE FROM Production.TransactionHistoryArchiveWHERE [TransactionID] = @TransactionIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetUnitMeasure_ALL]ASSET NOCOUNT ONSELECT [UnitMeasureCode],     [Name],     [ModifiedDate]FROM Production.UnitMeasureSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetUnitMeasureByUnitMeasureID]    @UnitMeasureCode nchar(3)ASSET NOCOUNT ONSELECT [UnitMeasureCode],     [Name],     [ModifiedDate]FROM Production.UnitMeasureWHERE [UnitMeasureCode] = @UnitMeasureCodeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveUnitMeasure]    @UnitMeasureCode nchar(3),    @Name nvarchar(50),    @ModifiedDate datetimeASSET NOCOUNT ONIF @UnitMeasureCode = '' BEGIN    INSERT INTO Production.UnitMeasure (        [UnitMeasureCode],        [Name],        [ModifiedDate]    )    VALUES (        @UnitMeasureCode,        @Name,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.UnitMeasure SET         [Name] = @Name,        [ModifiedDate] = @ModifiedDate    WHERE [UnitMeasureCode] = @UnitMeasureCodeENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveUnitMeasureByUnitMeasureID]    @UnitMeasureCode nchar(3)ASSET NOCOUNT ONDELETE FROM Production.UnitMeasureWHERE [UnitMeasureCode] = @UnitMeasureCodeSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[GetVendor_ALL]ASSET NOCOUNT ONSELECT [BusinessEntityID],     [AccountNumber],     [Name],     [CreditRating],     [PreferredVendorStatus],     [ActiveFlag],     [PurchasingWebServiceURL],     [ModifiedDate]FROM Purchasing.VendorSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[GetVendorByVendorID]    @BusinessEntityID intASSET NOCOUNT ONSELECT [BusinessEntityID],     [AccountNumber],     [Name],     [CreditRating],     [PreferredVendorStatus],     [ActiveFlag],     [PurchasingWebServiceURL],     [ModifiedDate]FROM Purchasing.VendorWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[SaveVendor]    @BusinessEntityID int,    @AccountNumber nvarchar(15),    @Name nvarchar(50),    @CreditRating tinyint,    @PreferredVendorStatus bit,    @ActiveFlag bit,    @PurchasingWebServiceURL nvarchar(1024),    @ModifiedDate datetimeASSET NOCOUNT ONIF @BusinessEntityID = 0 BEGIN    INSERT INTO Purchasing.Vendor (        [AccountNumber],        [Name],        [CreditRating],        [PreferredVendorStatus],        [ActiveFlag],        [PurchasingWebServiceURL],        [ModifiedDate]    )    VALUES (        @AccountNumber,        @Name,        @CreditRating,        @PreferredVendorStatus,        @ActiveFlag,        @PurchasingWebServiceURL,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Purchasing.Vendor SET         [AccountNumber] = @AccountNumber,        [Name] = @Name,        [CreditRating] = @CreditRating,        [PreferredVendorStatus] = @PreferredVendorStatus,        [ActiveFlag] = @ActiveFlag,        [PurchasingWebServiceURL] = @PurchasingWebServiceURL,        [ModifiedDate] = @ModifiedDate    WHERE [BusinessEntityID] = @BusinessEntityIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Purchasing].[RemoveVendorByVendorID]    @BusinessEntityID intASSET NOCOUNT ONDELETE FROM Purchasing.VendorWHERE [BusinessEntityID] = @BusinessEntityIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetWorkOrder_ALL]ASSET NOCOUNT ONSELECT [WorkOrderID],     [ProductID],     [OrderQty],     [StockedQty],     [ScrappedQty],     [StartDate],     [EndDate],     [DueDate],     [ScrapReasonID],     [ModifiedDate]FROM Production.WorkOrderSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetWorkOrderByWorkOrderID]    @WorkOrderID intASSET NOCOUNT ONSELECT [WorkOrderID],     [ProductID],     [OrderQty],     [StockedQty],     [ScrappedQty],     [StartDate],     [EndDate],     [DueDate],     [ScrapReasonID],     [ModifiedDate]FROM Production.WorkOrderWHERE [WorkOrderID] = @WorkOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[SaveWorkOrder]    @WorkOrderID int,    @ProductID int,    @OrderQty int,    @StockedQty int,    @ScrappedQty smallint,    @StartDate datetime,    @EndDate datetime,    @DueDate datetime,    @ScrapReasonID smallint,    @ModifiedDate datetimeASSET NOCOUNT ONIF @WorkOrderID = 0 BEGIN    INSERT INTO Production.WorkOrder (        [ProductID],        [OrderQty],        [StockedQty],        [ScrappedQty],        [StartDate],        [EndDate],        [DueDate],        [ScrapReasonID],        [ModifiedDate]    )    VALUES (        @ProductID,        @OrderQty,        @StockedQty,        @ScrappedQty,        @StartDate,        @EndDate,        @DueDate,        @ScrapReasonID,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.WorkOrder SET         [ProductID] = @ProductID,        [OrderQty] = @OrderQty,        [StockedQty] = @StockedQty,        [ScrappedQty] = @ScrappedQty,        [StartDate] = @StartDate,        [EndDate] = @EndDate,        [DueDate] = @DueDate,        [ScrapReasonID] = @ScrapReasonID,        [ModifiedDate] = @ModifiedDate    WHERE [WorkOrderID] = @WorkOrderIDENDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[RemoveWorkOrderByWorkOrderID]    @WorkOrderID intASSET NOCOUNT ONDELETE FROM Production.WorkOrderWHERE [WorkOrderID] = @WorkOrderIDSET NOCOUNT OFF
+GO
+
+CREATE PROC [Production].[GetWorkOrderRouting_ALL]ASSET NOCOUNT ONSELECT [WorkOrderID],     [ProductID],     [OperationSequence],     [LocationID],     [ScheduledStartDate],     [ScheduledEndDate],     [ActualStartDate],     [ActualEndDate],     [ActualResourceHrs],     [PlannedCost],     [ActualCost],     [ModifiedDate]FROM WorkOrderRoutingSET NOCOUNT OFF
+CREATE PROC [Production].[GetWorkOrderRoutingByWorkOrderRoutingID]    @WorkOrderID intASSET NOCOUNT ONSELECT [WorkOrderID],     [ProductID],     [OperationSequence],     [LocationID],     [ScheduledStartDate],     [ScheduledEndDate],     [ActualStartDate],     [ActualEndDate],     [ActualResourceHrs],     [PlannedCost],     [ActualCost],     [ModifiedDate]FROM WorkOrderRoutingWHERE [WorkOrderID] = @WorkOrderIDSET NOCOUNT OFF
+CREATE PROC [Production].[SaveWorkOrderRouting]    @WorkOrderID int,    @ProductID int,    @OperationSequence smallint,    @LocationID smallint,    @ScheduledStartDate datetime,    @ScheduledEndDate datetime,    @ActualStartDate datetime,    @ActualEndDate datetime,    @ActualResourceHrs decimal,    @PlannedCost money,    @ActualCost money,    @ModifiedDate datetimeASSET NOCOUNT ONIF @WorkOrderID = 0 BEGIN    INSERT INTO Production.WorkOrderRouting (        [ProductID],        [OperationSequence],        [LocationID],        [ScheduledStartDate],        [ScheduledEndDate],        [ActualStartDate],        [ActualEndDate],        [ActualResourceHrs],        [PlannedCost],        [ActualCost],        [ModifiedDate]    )    VALUES (        @ProductID,        @OperationSequence,        @LocationID,        @ScheduledStartDate,        @ScheduledEndDate,        @ActualStartDate,        @ActualEndDate,        @ActualResourceHrs,        @PlannedCost,        @ActualCost,        @ModifiedDate    )    SELECT SCOPE_IDENTITY() As InsertedIDENDELSE BEGIN    UPDATE Production.WorkOrderRouting SET         [ProductID] = @ProductID,        [OperationSequence] = @OperationSequence,        [LocationID] = @LocationID,        [ScheduledStartDate] = @ScheduledStartDate,        [ScheduledEndDate] = @ScheduledEndDate,        [ActualStartDate] = @ActualStartDate,        [ActualEndDate] = @ActualEndDate,        [ActualResourceHrs] = @ActualResourceHrs,        [PlannedCost] = @PlannedCost,        [ActualCost] = @ActualCost,        [ModifiedDate] = @ModifiedDate    WHERE [WorkOrderID] = @WorkOrderIDENDSET NOCOUNT OFF
+CREATE PROC [Production].[RemoveWorkOrderRoutingByWorkOrderRoutingID]    @WorkOrderID intASSET NOCOUNT ONDELETE FROM Production.WorkOrderRoutingWHERE [WorkOrderID] = @WorkOrderIDSET NOCOUNT OFF

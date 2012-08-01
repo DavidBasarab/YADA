@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using FluentAssertions;
 using TechTalk.SpecFlow;
@@ -28,6 +29,7 @@ namespace YADA.Acceptance.StepDefinations
 
         private bool Connected { get; set; }
         private bool ReadAdventureWorksDatabase { get; set; }
+        private bool ProcedureRecordsReturned { get; set; }
 
         [Given(@"I have a connection string configured")]
         public void GivenIHaveAConnectionStringConfigured()
@@ -45,6 +47,12 @@ namespace YADA.Acceptance.StepDefinations
         public void ThenICanGetResultsFromTheDatabase()
         {
             ReadAdventureWorksDatabase.Should().BeTrue();
+        }
+
+        [Then(@"I have records returned")]
+        public void ThenIHaveRecordsReturned()
+        {
+            ProcedureRecordsReturned.Should().BeTrue();
         }
 
         [When(@"I attempt to connect to the database")]
@@ -92,6 +100,39 @@ namespace YADA.Acceptance.StepDefinations
             catch (Exception ex)
             {
                 ReadAdventureWorksDatabase = false;
+
+                WriteErrorToConsole(ex);
+            }
+        }
+
+        [When(@"I attempt to run (.*)")]
+        public void WhenIAttemptToRun(string procedureName)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString))
+                using (var command = new SqlCommand(procedureName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    connection.Open();
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        reader.Read();
+
+                        ProcedureRecordsReturned = reader.HasRows;
+
+                        reader.Close();
+                        reader.Dispose();
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ProcedureRecordsReturned = false;
 
                 WriteErrorToConsole(ex);
             }

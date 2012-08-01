@@ -12,3 +12,8 @@ Scenario: There is an adventure works database installed
     Given I have a connection string configured
     When I attempt to read from an adventure works table
     Then I can get results from the database
+
+Scenario: The adventure works database has CRUD procedures.
+    Given I have a connection string configured
+    When I attempt to run [Purchasing].[GetVendor_ALL]
+    Then I have records returned

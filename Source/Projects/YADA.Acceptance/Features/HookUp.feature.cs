@@ -98,6 +98,23 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("The adventure works database has CRUD procedures.")]
+        public virtual void TheAdventureWorksDatabaseHasCRUDProcedures_()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The adventure works database has CRUD procedures.", ((string[])(null)));
+#line 16
+this.ScenarioSetup(scenarioInfo);
+#line 17
+    testRunner.Given("I have a connection string configured");
+#line 18
+    testRunner.When("I attempt to run [Purchasing].[GetVendor_ALL]");
+#line 19
+    testRunner.Then("I have records returned");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore
