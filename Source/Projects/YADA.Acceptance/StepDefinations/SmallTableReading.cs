@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using FluentAssertions;
 using TechTalk.SpecFlow;
 using YADA.Acceptance.Extensions;
 using YADA.Acceptance.StepDefinations.Values;
-using NUnit.Framework;
 
 namespace YADA.Acceptance.StepDefinations
 {
@@ -37,17 +37,66 @@ namespace YADA.Acceptance.StepDefinations
             testResult.Should().BeTrue();
         }
 
-        [Given(@"I have small table populated with (.*) rows")]
-        public void GivenIHaveSmallTablePopulatedWithRows(int numberOfRows)
+        [Given(@"I have a table populated with between 10000 to 20000 rows")]
+        public void GivenIHaveATablePopulatedWithBetween10000To20000Rows()
         {
-            //ScenarioContext.Current.Pending();
-            Assert.Fail();
+            var value = GetScalarValue("SELECT COUNT(1) FROM Sales.Customer");
+
+            value.Should().BeInRange(10000, 20000);
+        }
+
+        [Given(@"I have a table populated with between 500 to 1000 rows")]
+        public void GivenIHaveATablePopulatedWithBetween500To1000Rows()
+        {
+            var value = GetScalarValue("SELECT COUNT(1) FROM Sales.Store");
+
+            value.Should().BeInRange(500, 1000);
+        }
+
+        [Given(@"I have a table populated with over 100000 rows")]
+        public void GivenIHaveATablePopulatedWithOver100000Rows()
+        {
+            var value = GetScalarValue("SELECT COUNT(1) FROM Sales.SalesOrderDetail");
+
+            value.Should().BeGreaterThan(100000);
         }
 
         [Then(@"the operation should happen in less than (.*) ms")]
         public void ThenTheOperationShouldHappenInLessThanMS(int milliseconds)
         {
             AverageExecutionTime.Should().BeLessThan(milliseconds);
+        }
+
+        [When(@"using a store procedure \((.*)\) to read the records")]
+        public void WhenUsingAStoreProcedureTestToReadTheRecords(string procedureName)
+        {
+            var database = Database.Instance;
+
+            for (var i = 0; i < 50; i++)
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                switch (procedureName)
+                {
+                    case "Sales.SmallRowTest":
+                        database.GetRecords<Store>(procedureName);
+                        break;
+                    case "Sales.MediumRowTest":
+                        database.GetRecords<Customer>(procedureName);
+                        break;
+                    case "Sales.LargeRowTest":
+                        database.GetRecords<SalesOrderDetail>(procedureName);
+                        break;
+                }
+
+                stopwatch.Stop();
+
+                ExecutionTime = stopwatch.Elapsed;
+
+                ExecutionTimes.Add(ExecutionTime.Milliseconds);
+            }
+
+            Console.WriteLine("Average Read Time for read {0} MS", AverageExecutionTime);
         }
 
         [When(@"using a store procedure to read a record")]
@@ -114,35 +163,59 @@ namespace YADA.Acceptance.StepDefinations
             Console.WriteLine("Average Read Time for read {0} MS", AverageExecutionTime);
         }
 
-        [When(@"using a store procedure to read in (.*) records")]
-        public void WhenUsingAStoreProcedureToReadInRecords(int numberOfRecords)
+        private int GetScalarValue(string commandText)
         {
-            var database = Database.Instance;
-
-            for (var i = 0; i < 50; i++)
+            try
             {
-                var startRecordID = NumberExtensions.NextRandom(1, NumberOfInsertedRows - numberOfRecords - 1);
+                var value = 0;
 
-                var parameters = new[]
-                                 {
-                                     Parameter.Create("MinRecordID", startRecordID),
-                                     Parameter.Create("MaxRecordID", startRecordID + numberOfRecords - 1)
-                                 };
+                using (var connection = new SqlConnection(ConnectionString))
+                using (var command = new SqlCommand(commandText, connection))
+                {
+                    connection.Open();
+                    value = (int)command.ExecuteScalar();
+                    connection.Close();
+                }
 
-                var stopwatch = Stopwatch.StartNew();
-
-                var items = database.GetRecords<NarrowSmallData>("[YadaTesting].[dbo].[GetRangeOfRecords]", parameters);
-
-                stopwatch.Stop();
-
-                ExecutionTime = stopwatch.Elapsed;
-
-                ExecutionTimes.Add(ExecutionTime.Milliseconds);
-
-                items.Count.Should().Be(numberOfRecords);
+                return value;
             }
+            catch (Exception ex)
+            {
+                Helpers.WriteErrorToConsole(ex);
 
-            Console.WriteLine("Average Read Time for read {0} MS", AverageExecutionTime);
+                return -1;
+            }
         }
+
+        //[When(@"using a store procedure to read in (.*) records")]
+        //public void WhenUsingAStoreProcedureToReadInRecords(int numberOfRecords)
+        //{
+        //    var database = Database.Instance;
+
+        //    for (var i = 0; i < 50; i++)
+        //    {
+        //        var startRecordID = NumberExtensions.NextRandom(1, NumberOfInsertedRows - numberOfRecords - 1);
+
+        //        var parameters = new[]
+        //                         {
+        //                             Parameter.Create("MinRecordID", startRecordID),
+        //                             Parameter.Create("MaxRecordID", startRecordID + numberOfRecords - 1)
+        //                         };
+
+        //        var stopwatch = Stopwatch.StartNew();
+
+        //        var items = database.GetRecords<NarrowSmallData>("[YadaTesting].[dbo].[GetRangeOfRecords]", parameters);
+
+        //        stopwatch.Stop();
+
+        //        ExecutionTime = stopwatch.Elapsed;
+
+        //        ExecutionTimes.Add(ExecutionTime.Milliseconds);
+
+        //        items.Count.Should().Be(numberOfRecords);
+        //    }
+
+        //    Console.WriteLine("Average Read Time for read {0} MS", AverageExecutionTime);
+        //}
     }
 }

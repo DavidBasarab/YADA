@@ -92,18 +92,18 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I want to read in 15 rows out of 1000")]
-        public virtual void IWantToReadIn15RowsOutOf1000()
+        [NUnit.Framework.DescriptionAttribute("I want to read in 40 rows out of table between 500 to 1000 rows")]
+        public virtual void IWantToReadIn40RowsOutOfTableBetween500To1000Rows()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 15 rows out of 1000", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 40 rows out of table between 500 to 1000 rows", ((string[])(null)));
 #line 13
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line 14
-    testRunner.Given("I have small table populated with 1000 rows");
+    testRunner.Given("I have a table populated with between 500 to 1000 rows");
 #line 15
-    testRunner.When("using a store procedure to read in 15 records");
+    testRunner.When("using a store procedure (Sales.SmallRowTest) to read the records");
 #line 16
     testRunner.Then("the operation should happen in less than 3 ms");
 #line hidden
@@ -111,18 +111,18 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I want to read in 150 rows out of 1000")]
-        public virtual void IWantToReadIn150RowsOutOf1000()
+        [NUnit.Framework.DescriptionAttribute("I want to read in 150 rows of table between 10000 to 20000 rows")]
+        public virtual void IWantToReadIn150RowsOfTableBetween10000To20000Rows()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 150 rows out of 1000", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 150 rows of table between 10000 to 20000 rows", ((string[])(null)));
 #line 18
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line 19
-    testRunner.Given("I have small table populated with 1000 rows");
+    testRunner.Given("I have a table populated with between 10000 to 20000 rows");
 #line 20
-    testRunner.When("using a store procedure to read in 150 records");
+    testRunner.When("using a store procedure (Sales.MediumRowTest) to read the records");
 #line 21
     testRunner.Then("the operation should happen in less than 3 ms");
 #line hidden
@@ -130,18 +130,18 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I want to read in 1500 rows out of 10000")]
-        public virtual void IWantToReadIn1500RowsOutOf10000()
+        [NUnit.Framework.DescriptionAttribute("I want to read in 1500 rows over 100000 rows")]
+        public virtual void IWantToReadIn1500RowsOver100000Rows()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 1500 rows out of 10000", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I want to read in 1500 rows over 100000 rows", ((string[])(null)));
 #line 23
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line 24
-    testRunner.Given("I have small table populated with 10000 rows");
+    testRunner.Given("I have a table populated with over 100000 rows");
 #line 25
-    testRunner.When("using a store procedure to read in 1500 records");
+    testRunner.When("using a store procedure (Sales.LargeRowTest) to read the records");
 #line 26
     testRunner.Then("the operation should happen in less than 16 ms");
 #line hidden

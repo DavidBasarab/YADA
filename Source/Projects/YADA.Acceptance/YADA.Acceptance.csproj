@@ -75,6 +75,7 @@
     <Compile Include="StepDefinations\Hookup.cs" />
     <Compile Include="StepDefinations\SmallTableReading.cs" />
     <Compile Include="StepDefinations\Values\NarrowSmallData.cs" />
+    <Compile Include="StepDefinations\Values\Store.cs" />
     <Compile Include="StepDefinations\Values\Vendor.cs" />
   </ItemGroup>
   <ItemGroup>
