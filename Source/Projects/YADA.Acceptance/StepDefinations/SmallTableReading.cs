@@ -79,13 +79,13 @@ namespace YADA.Acceptance.StepDefinations
                 switch (procedureName)
                 {
                     case "Sales.SmallRowTest":
-                        database.GetRecords<Store>(procedureName);
+                        database.GetRecords<Store>("SELECT * FROM Sales.Store WHERE SalesPersonID = 289");
                         break;
                     case "Sales.MediumRowTest":
-                        database.GetRecords<Customer>(procedureName);
+                        database.GetRecords<Customer>("SELECT * FROM Sales.Customer WHERE TerritoryID = 5");
                         break;
                     case "Sales.LargeRowTest":
-                        database.GetRecords<SalesOrderDetail>(procedureName);
+                        database.GetRecords<SalesOrderDetail>("SELECT * FROM Sales.SalesOrderDetail WHERE ProductID = 715");
                         break;
                 }
 

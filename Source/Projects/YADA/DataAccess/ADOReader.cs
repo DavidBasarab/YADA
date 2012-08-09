@@ -6,22 +6,22 @@ namespace YADA.DataAccess
 {
     internal interface Reader
     {
-        IDataReader RetrieveRecord(string storeProcedure, IEnumerable<Parameter> parameters, CommandBehavior commandBehavior = CommandBehavior.Default);
+        IDataReader RetrieveRecord(string commandText, IEnumerable<Parameter> parameters, Options options = Options.None);
     }
 
     internal class YadaReader : Reader
     {
-        public IDataReader RetrieveRecord(string storeProcedure, IEnumerable<Parameter> parameters, CommandBehavior commandBehavior = CommandBehavior.Default)
+        public IDataReader RetrieveRecord(string commandText, IEnumerable<Parameter> parameters, Options options = Options.None)
         {
-            return ADOReader.RetrieveRecord(storeProcedure, parameters, commandBehavior);
+            return ADOReader.RetrieveRecord(commandText, parameters, options);
         }
     }
 
     internal class ADOReader : IDataReader
     {
-        public static IDataReader RetrieveRecord(string storeProcedure, IEnumerable<Parameter> parameters, CommandBehavior commandBehavior = CommandBehavior.Default)
+        public static IDataReader RetrieveRecord(string commandText, IEnumerable<Parameter> parameters, Options commandBehavior = Options.None)
         {
-            return new ADOReader(storeProcedure, parameters).GetReader(commandBehavior);
+            return new ADOReader(commandText, parameters).GetReader(commandBehavior);
         }
 
         public ADOReader(string storeProcedure, IEnumerable<Parameter> parameters)
@@ -208,9 +208,9 @@ namespace YADA.DataAccess
             get { return Reader.RecordsAffected; }
         }
 
-        private ADOReader GetReader(CommandBehavior commandBehavior)
+        private ADOReader GetReader(Options options)
         {
-            Reader = DataOperation.RetrieveRecord(commandBehavior);
+            Reader = DataOperation.RetrieveRecord(options);
 
             return this;
         }

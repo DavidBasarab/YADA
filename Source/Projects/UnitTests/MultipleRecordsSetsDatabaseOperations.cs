@@ -65,7 +65,28 @@ namespace UnitTests
 
             CreateDatabaseObject();
 
-            _reader.Expect(v => v.RetrieveRecord(StoreProcedureName, null)).Return(_mockIReader);
+            ExpectRetrieveRecord();
+
+            var lists = _database.GetRecords<SampleValue>(CommandText);
+
+            VerifyMultiReturnRecords(lists);
+        }
+
+        private void ExpectRetrieveRecord(Options options = Options.None)
+        {
+            _reader.Expect(v => v.RetrieveRecord(CommandText, null, options)).Return(_mockIReader);
+        }
+
+        [Test]
+        public void CanGetByStoreProcedureAListOfEntities()
+        {
+            CreateMockReaders();
+
+            ExpectMultiReturnRecords();
+
+            CreateDatabaseObject();
+
+            ExpectRetrieveRecord(Options.StoreProcedure);
 
             var lists = _database.GetRecords<SampleValue>(StoreProcedureName);
 
@@ -87,9 +108,9 @@ namespace UnitTests
                                 new Parameter("MinNumber", 1)
                             };
 
-            _reader.Expect(v => v.RetrieveRecord(StoreProcedureName, paramters)).Return(_mockIReader);
+            _reader.Expect(v => v.RetrieveRecord(CommandText, paramters)).Return(_mockIReader);
 
-            var lists = _database.GetRecords<SampleValue>(StoreProcedureName, paramters);
+            var lists = _database.GetRecords<SampleValue>(CommandText, paramters);
 
             VerifyMultiReturnRecords(lists);
         }

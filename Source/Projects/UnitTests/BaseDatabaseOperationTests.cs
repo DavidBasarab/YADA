@@ -8,7 +8,8 @@ namespace UnitTests
 {
     internal abstract class BaseDatabaseOperationTests
     {
-        protected const string StoreProcedureName = "dbo.TestProcedure";
+        protected const string CommandText = "SELECT * FROM FakeSQL";
+        protected const string StoreProcedureName = "dbo.SomeStoreProcedure";
         protected Reader _reader;
         protected IDataReader _mockIReader;
         protected Database _database;

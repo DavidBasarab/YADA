@@ -5,6 +5,14 @@ using YADA.DataAccess;
 
 namespace YADA
 {
+    [Flags]
+    public enum Options
+    {
+        None = 0,
+        SingleRow = 1,
+        StoreProcedure = 2
+    }
+
     public class Database
     {
         public static Database Instance
@@ -26,11 +34,11 @@ namespace YADA
             get { return _reader ?? (_reader = new YadaReader()); }
         }
 
-        public TEntity GetRecord<TEntity>(string procedureName, IEnumerable<Parameter> parameters = null) where TEntity : new()
+        public TEntity GetRecord<TEntity>(string procedureName, IEnumerable<Parameter> parameters = null, Options options = Options.None) where TEntity : new()
         {
             TEntity newObject;
 
-            using (var reader = Reader.RetrieveRecord(procedureName, parameters, CommandBehavior.SingleRow))
+            using (var reader = Reader.RetrieveRecord(procedureName, parameters, Options.SingleRow | options))
             {
                 reader.Read();
 

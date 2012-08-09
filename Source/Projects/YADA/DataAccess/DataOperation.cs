@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using YADA.Extensions;
 
 namespace YADA.DataAccess
 {
     internal class DataOperation : IDisposable
     {
+        private static CommandBehavior GetCommandBehavior(Options options)
+        {
+            return options.IsFlagSet(Options.SingleRow) ? CommandBehavior.SingleRow : CommandBehavior.Default;
+        }
+
         protected SqlCommand _command;
         protected SqlConnection _conn;
         private IEnumerable<Parameter> _parameters;
 
-        public DataOperation(string storeProcedure, IEnumerable<Parameter> parameters)
+        public DataOperation(string commandText, IEnumerable<Parameter> parameters)
         {
-            CommandText = storeProcedure;
+            CommandText = commandText;
             Parameters = parameters;
         }
 
@@ -45,16 +51,18 @@ namespace YADA.DataAccess
             }
         }
 
-        public IDataReader RetrieveRecord(CommandBehavior commandBehavior)
+        public IDataReader RetrieveRecord(Options options)
         {
             CreateConnection();
             using (CreateCommand())
             {
+                if (options.IsFlagSet(Options.StoreProcedure)) _command.CommandType = CommandType.StoredProcedure;
+
                 AddParameters();
 
                 OpenConnection();
 
-                var reader = _command.ExecuteReader(commandBehavior);
+                var reader = _command.ExecuteReader(GetCommandBehavior(options));
 
                 return reader;
             }
@@ -62,7 +70,6 @@ namespace YADA.DataAccess
 
         private void AddParameters()
         {
-            // Adding clear here, however I do not think I should be.  Find later why a clear is required.
             foreach(var parameter in Parameters)
             {
                 if (_command.Parameters.Contains(parameter.SqlParameter.ParameterName)) _command.Parameters[parameter.SqlParameter.ParameterName] = parameter.SqlParameter;
@@ -77,10 +84,7 @@ namespace YADA.DataAccess
 
         private SqlCommand CreateCommand()
         {
-            return _command = new SqlCommand(CommandText, _conn)
-                              {
-                                  CommandType = CommandType.StoredProcedure
-                              };
+            return _command = new SqlCommand(CommandText, _conn);
         }
 
         private SqlConnection CreateConnection()
