@@ -50,11 +50,11 @@ namespace YADA
             return newObject;
         }
 
-        public IList<TEntity> GetRecords<TEntity>(string procedure, IEnumerable<Parameter> parameters = null) where TEntity : new()
+        public IList<TEntity> GetRecords<TEntity>(string procedure, IEnumerable<Parameter> parameters = null, Options options = Options.None) where TEntity : new()
         {
             var records = new List<TEntity>();
 
-            using (var reader = Reader.RetrieveRecord(procedure, parameters))
+            using (var reader = Reader.RetrieveRecord(procedure, parameters, options))
             {
                 while (reader.Read()) records.Add(CreateFromReader<TEntity>(reader));
 
