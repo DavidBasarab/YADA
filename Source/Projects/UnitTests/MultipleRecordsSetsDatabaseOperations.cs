@@ -40,6 +40,11 @@ namespace UnitTests
             _mockIReader.Expect(v => v.Read()).Return(returnValue);
         }
 
+        private void ExpectRetrieveRecord(string commandText = CommandText, Options options = Options.None)
+        {
+            _reader.Expect(v => v.RetrieveRecord(commandText, null, options)).Return(_mockIReader);
+        }
+
         private void VerifyMultiReturnRecords(IList<SampleValue> lists)
         {
             MockRepository.VerifyAll();
@@ -57,27 +62,6 @@ namespace UnitTests
         }
 
         [Test]
-        public void WillGetAListOfEntities()
-        {
-            CreateMockReaders();
-
-            ExpectMultiReturnRecords();
-
-            CreateDatabaseObject();
-
-            ExpectRetrieveRecord();
-
-            var lists = _database.GetRecords<SampleValue>(CommandText);
-
-            VerifyMultiReturnRecords(lists);
-        }
-
-        private void ExpectRetrieveRecord(Options options = Options.None)
-        {
-            _reader.Expect(v => v.RetrieveRecord(CommandText, null, options)).Return(_mockIReader);
-        }
-
-        [Test]
         public void CanGetByStoreProcedureAListOfEntities()
         {
             CreateMockReaders();
@@ -86,9 +70,9 @@ namespace UnitTests
 
             CreateDatabaseObject();
 
-            ExpectRetrieveRecord(Options.StoreProcedure);
+            ExpectRetrieveRecord(StoreProcedureName, Options.StoreProcedure);
 
-            var lists = _database.GetRecords<SampleValue>(StoreProcedureName);
+            var lists = _database.GetRecords<SampleValue>(StoreProcedureName, options: Options.StoreProcedure);
 
             VerifyMultiReturnRecords(lists);
         }
@@ -111,6 +95,22 @@ namespace UnitTests
             _reader.Expect(v => v.RetrieveRecord(CommandText, paramters)).Return(_mockIReader);
 
             var lists = _database.GetRecords<SampleValue>(CommandText, paramters);
+
+            VerifyMultiReturnRecords(lists);
+        }
+
+        [Test]
+        public void WillGetAListOfEntities()
+        {
+            CreateMockReaders();
+
+            ExpectMultiReturnRecords();
+
+            CreateDatabaseObject();
+
+            ExpectRetrieveRecord(CommandText);
+
+            var lists = _database.GetRecords<SampleValue>(CommandText);
 
             VerifyMultiReturnRecords(lists);
         }

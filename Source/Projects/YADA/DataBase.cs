@@ -34,11 +34,11 @@ namespace YADA
             get { return _reader ?? (_reader = new YadaReader()); }
         }
 
-        public TEntity GetRecord<TEntity>(string procedureName, IEnumerable<Parameter> parameters = null, Options options = Options.None) where TEntity : new()
+        public TEntity GetRecord<TEntity>(string commandText, IEnumerable<Parameter> parameters = null, Options options = Options.None) where TEntity : new()
         {
             TEntity newObject;
 
-            using (var reader = Reader.RetrieveRecord(procedureName, parameters, Options.SingleRow | options))
+            using (var reader = Reader.RetrieveRecord(commandText, parameters, Options.SingleRow | options))
             {
                 reader.Read();
 
@@ -50,11 +50,11 @@ namespace YADA
             return newObject;
         }
 
-        public IList<TEntity> GetRecords<TEntity>(string procedure, IEnumerable<Parameter> parameters = null, Options options = Options.None) where TEntity : new()
+        public IList<TEntity> GetRecords<TEntity>(string commandText, IEnumerable<Parameter> parameters = null, Options options = Options.None) where TEntity : new()
         {
             var records = new List<TEntity>();
 
-            using (var reader = Reader.RetrieveRecord(procedure, parameters, options))
+            using (var reader = Reader.RetrieveRecord(commandText, parameters, options))
             {
                 while (reader.Read()) records.Add(CreateFromReader<TEntity>(reader));
 
