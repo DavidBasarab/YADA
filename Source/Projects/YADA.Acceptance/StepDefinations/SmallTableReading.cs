@@ -27,8 +27,6 @@ namespace YADA.Acceptance.StepDefinations
             get { return ExecutionTimes.Average(); }
         }
 
-        private int NumberOfInsertedRows { get; set; }
-
         [Given(@"I can connect to AdventureWorks database")]
         public void GivenICanConnectToAdventureWorksDatabase()
         {
@@ -117,7 +115,7 @@ namespace YADA.Acceptance.StepDefinations
 
                 var keyID = (i % 3);
 
-                var item = database.GetRecord<Vendor>("Purchasing.GetVendorByVendorID", new[] { Parameter.Create("BusinessEntityID", vendorIDs[keyID]) });
+                var item = database.GetRecord<Vendor>("Purchasing.GetVendorByVendorID", new[] { Parameter.Create("BusinessEntityID", vendorIDs[keyID]) }, Options.StoreProcedure);
 
                 stopWatch.Stop();
 
@@ -186,36 +184,5 @@ namespace YADA.Acceptance.StepDefinations
                 return -1;
             }
         }
-
-        //[When(@"using a store procedure to read in (.*) records")]
-        //public void WhenUsingAStoreProcedureToReadInRecords(int numberOfRecords)
-        //{
-        //    var database = Database.Instance;
-
-        //    for (var i = 0; i < 50; i++)
-        //    {
-        //        var startRecordID = NumberExtensions.NextRandom(1, NumberOfInsertedRows - numberOfRecords - 1);
-
-        //        var parameters = new[]
-        //                         {
-        //                             Parameter.Create("MinRecordID", startRecordID),
-        //                             Parameter.Create("MaxRecordID", startRecordID + numberOfRecords - 1)
-        //                         };
-
-        //        var stopwatch = Stopwatch.StartNew();
-
-        //        var items = database.GetRecords<NarrowSmallData>("[YadaTesting].[dbo].[GetRangeOfRecords]", parameters);
-
-        //        stopwatch.Stop();
-
-        //        ExecutionTime = stopwatch.Elapsed;
-
-        //        ExecutionTimes.Add(ExecutionTime.Milliseconds);
-
-        //        items.Count.Should().Be(numberOfRecords);
-        //    }
-
-        //    Console.WriteLine("Average Read Time for read {0} MS", AverageExecutionTime);
-        //}
     }
 }
