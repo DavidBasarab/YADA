@@ -27,12 +27,8 @@ namespace UnitTests
 
             ExpectCloseDispose();
 
-            _mockIReader.Expect(v => v.FieldCount).Return(2);
-            _mockIReader.Expect(v => v.GetName(0)).Return("FirstName");
-            _mockIReader.Expect(v => v.GetName(1)).Return("LastName");
-
-            ExpectColumnAccess(FirstName, 0);
-            ExpectColumnAccess(LastName, 1);
+            ExpectColumnAccess("FirstName", FirstName, 0);
+            ExpectColumnAccess("LastName", LastName, 1);
         }
 
         [Test]

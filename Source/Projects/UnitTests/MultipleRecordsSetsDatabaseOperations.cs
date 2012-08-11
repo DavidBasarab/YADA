@@ -24,14 +24,10 @@ namespace UnitTests
             ExpectRead(true);
             ExpectRead(false);
 
-            _mockIReader.Expect(v => v.FieldCount).Return(2);
-            _mockIReader.Expect(v => v.GetName(0)).Return("FirstName");
-            _mockIReader.Expect(v => v.GetName(1)).Return("LastName");
-
-            ExpectColumnAccess(ItemOneFirstName, 0);
-            ExpectColumnAccess(ItemOneLastName, 1);
-            ExpectColumnAccess(ItemTwoFirstName, 0);
-            ExpectColumnAccess(ItemTwoLastName, 1);
+            ExpectColumnAccess("FirstName", ItemOneFirstName, 0);
+            ExpectColumnAccess("LastName", ItemOneLastName, 1);
+            ExpectColumnAccess("FirstName", ItemTwoFirstName, 0);
+            ExpectColumnAccess("LastName", ItemTwoLastName, 1);
         }
 
         private void ExpectRead(bool returnValue)
