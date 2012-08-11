@@ -58,6 +58,7 @@
     <Compile Include="SingleEntityDataBaseOperations.cs" />
     <Compile Include="ParamterEquality.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Values\ReflectionValueTester.cs" />
     <Compile Include="Values\SampleValue.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace UnitTests.Values
+﻿namespace UnitTests.Values
 {
     public class SampleValue
     {

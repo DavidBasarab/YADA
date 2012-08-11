@@ -10,7 +10,7 @@ namespace YADA.Acceptance.StepDefinations.Values
 
         public string Name { get; set; }
 
-        public short CreditRating { get; set; }
+        public byte CreditRating { get; set; }
 
         public bool ActiveFlag { get; set; }
 

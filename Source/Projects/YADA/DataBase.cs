@@ -4,17 +4,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using YADA.DataAccess;
+using YADA.PropertyReflection;
 
 namespace YADA
 {
-    [Flags]
-    public enum Options
-    {
-        None = 0,
-        SingleRow = 1,
-        StoreProcedure = 2
-    }
-
     public class Database
     {
         public static Database Instance
@@ -80,95 +73,31 @@ namespace YADA
             dataOperation.ExecuteNonQuery();
         }
 
+        private PropertyReflectionManager _reflectionManager;
+        private PropertyReflectionManager ReflectionManager
+        {
+            get { return _reflectionManager ?? (_reflectionManager = new PropertyReflectionManager()) ; }
+        }
+
         private TEntity CreateFromReader<TEntity>(IDataRecord reader) where TEntity : new()
         {
             var newObject = new TEntity();
 
-            var properties = GetProperties<TEntity>();
+            var helper = ReflectionManager.GetFromCache<TEntity>();
 
-            foreach(var propertyInfo in properties)
+            foreach(var property in helper.Properties)
             {
-                var temp = propertyInfo.GetSetMethod();
+                var value = reader[property.PropertyName];
 
-                var value = reader[propertyInfo.Name];
-
-                if (value is DBNull) value = null;
-
-                //propertyInfo.SetValue(newObject, value, null);
-
-                var currentType = propertyInfo.PropertyType;
-
-                if (currentType == typeof(object))
+                if (value is DBNull)
                 {
-                    var setForProperty = (Action<TEntity, object>)Delegate.CreateDelegate(typeof(Action<TEntity, object>), null, temp);
-
-                    setForProperty(newObject, value);
-
-                    continue;
+                    value = null;
                 }
 
-                if (currentType == typeof(int))
-                {
-                    var setForProperty = (Action<TEntity, int>)Delegate.CreateDelegate(typeof(Action<TEntity, int>), null, temp);
-
-                    setForProperty(newObject, (int)value);
-
-                    continue;
-                }
-                if (currentType == typeof(string))
-                {
-                    var setForProperty = (Action<TEntity, string>)Delegate.CreateDelegate(typeof(Action<TEntity, string>), null, temp);
-
-                    setForProperty(newObject, (string)value);
-
-                    continue;
-                }
-                if (currentType == typeof(DateTime))
-                {
-                    var setForProperty = (Action<TEntity, DateTime>)Delegate.CreateDelegate(typeof(Action<TEntity, DateTime>), null, temp);
-
-                    setForProperty(newObject, (DateTime)value);
-
-                    continue;
-                }
-                if (currentType == typeof(Guid))
-                {
-                    var setForProperty = (Action<TEntity, Guid>)Delegate.CreateDelegate(typeof(Action<TEntity, Guid>), null, temp);
-
-                    setForProperty(newObject, (Guid)value);
-
-                    continue;
-                }
-                if (currentType == typeof(short))
-                {
-                    var setForProperty = (Action<TEntity, short>)Delegate.CreateDelegate(typeof(Action<TEntity, short>), null, temp);
-
-                    setForProperty(newObject, (short)value);
-
-                    continue;
-                }
-                
-                propertyInfo.SetValue(newObject, value, null);
+                property.SetProperty(newObject, value);
             }
 
             return newObject;
-        }
-
-        private IEnumerable<PropertyInfo> GetProperties<TEntity>() where TEntity : new()
-        {
-            IEnumerable<PropertyInfo> properties;
-            var entityType = typeof(TEntity);
-
-            var foundType = EntitiesProperties.TryGetValue(entityType, out properties);
-
-            if (!foundType)
-            {
-                properties = entityType.GetProperties();
-
-                EntitiesProperties.Add(entityType, properties);
-            }
-
-            return properties;
         }
 
         private class Nested

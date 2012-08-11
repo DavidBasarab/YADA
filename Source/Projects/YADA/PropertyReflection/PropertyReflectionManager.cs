@@ -1,30 +1,38 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace YADA.PropertyReflection
 {
     internal class PropertyReflectionManager
     {
-        private static IDictionary<Type, ReflectionHelper> Cache { get; set; }
+        private static IDictionary<Type, object> _cache;
 
-        public PropertyReflectionManager(IDictionary<Type, ReflectionHelper> cache)
+        private static IDictionary<Type, object> Cache
         {
-            Cache = cache;
+            get { return _cache ?? (_cache = new ConcurrentDictionary<Type, object>()); }
+        }
+
+        public PropertyReflectionManager(IDictionary<Type, object> cache)
+        {
+            _cache = cache;
         }
 
         public PropertyReflectionManager() {}
 
-        public ReflectionHelper GetFromCache(Type type)
+        public ReflectionHelper<T> GetFromCache<T>()
         {
-            ReflectionHelper helper;
+            var type = typeof(T);
+            
+            object helper;
 
-            if (Cache.TryGetValue(type, out helper)) return helper;
+            if (Cache.TryGetValue(type, out helper)) return (ReflectionHelper<T>)helper;
 
-            helper = new ReflectionHelper(type);
+            helper = new ReflectionHelper<T>(type);
 
             Cache.Add(type, helper);
 
-            return helper;
+            return (ReflectionHelper<T>)helper;
         }
     }
 }

@@ -52,10 +52,12 @@
     <Compile Include="Extensions\EnumerationExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="MainModule.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataBase.cs" />
     <Compile Include="PropertyReflection\PropertyReflectionManager.cs" />
+    <Compile Include="PropertyReflection\PropertySetting.cs" />
     <Compile Include="PropertyReflection\ReflectionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
