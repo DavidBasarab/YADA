@@ -39,5 +39,11 @@ namespace UnitTests
             _mockIReader.Expect(v => v.Close());
             _mockIReader.Expect(v => v.Dispose());
         }
+
+        protected void ExpectColumnAccess(string columnName, string returnValue, int ordinal)
+        {
+            _mockIReader.Expect(v => v.GetOrdinal(columnName)).Return(ordinal);
+            _mockIReader.Expect(v => v[ordinal]).Return(returnValue);
+        }
     }
 }

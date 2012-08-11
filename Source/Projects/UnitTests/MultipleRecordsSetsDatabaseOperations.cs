@@ -16,11 +16,6 @@ namespace UnitTests
         private const string ItemTwoFirstName = "Eric";
         private const string ItemTwoLastName = "Cartman";
 
-        private void ExpectColumnAccess(string columnName, string returnValue)
-        {
-            _mockIReader.Expect(v => v[columnName]).Return(returnValue);
-        }
-
         private void ExpectMultiReturnRecords()
         {
             ExpectCloseDispose();
@@ -29,10 +24,10 @@ namespace UnitTests
             ExpectRead(true);
             ExpectRead(false);
 
-            ExpectColumnAccess("FirstName", ItemOneFirstName);
-            ExpectColumnAccess("LastName", ItemOneLastName);
-            ExpectColumnAccess("FirstName", ItemTwoFirstName);
-            ExpectColumnAccess("LastName", ItemTwoLastName);
+            ExpectColumnAccess("FirstName", ItemOneFirstName, 0);
+            ExpectColumnAccess("LastName", ItemOneLastName, 1);
+            ExpectColumnAccess("FirstName", ItemTwoFirstName, 0);
+            ExpectColumnAccess("LastName", ItemTwoLastName, 1);
         }
 
         private void ExpectRead(bool returnValue)

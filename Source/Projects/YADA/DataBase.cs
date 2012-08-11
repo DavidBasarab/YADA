@@ -87,7 +87,9 @@ namespace YADA
 
             foreach(var property in helper.Properties)
             {
-                var value = reader[property.PropertyName];
+                var ordinalValue = reader.GetOrdinal(property.PropertyName);
+
+                var value = reader[ordinalValue];
 
                 if (value is DBNull)
                 {

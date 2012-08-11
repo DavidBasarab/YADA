@@ -105,7 +105,7 @@ this.FeatureBackground();
 #line 15
     testRunner.When("using a store procedure (Sales.SmallRowTest) to read the records");
 #line 16
-    testRunner.Then("the operation should happen in less than 3 ms");
+    testRunner.Then("the operation should happen in less than 5 ms");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -124,7 +124,7 @@ this.FeatureBackground();
 #line 20
     testRunner.When("using a store procedure (Sales.MediumRowTest) to read the records");
 #line 21
-    testRunner.Then("the operation should happen in less than 3 ms");
+    testRunner.Then("the operation should happen in less than 5 ms");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -143,7 +143,7 @@ this.FeatureBackground();
 #line 25
     testRunner.When("using a store procedure (Sales.LargeRowTest) to read the records");
 #line 26
-    testRunner.Then("the operation should happen in less than 16 ms");
+    testRunner.Then("the operation should happen in less than 20 ms");
 #line hidden
             this.ScenarioCleanup();
         }
