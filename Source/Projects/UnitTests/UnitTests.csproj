@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="BaseDatabaseOperationTests.cs" />
     <Compile Include="MultipleRecordsSetsDatabaseOperations.cs" />
+    <Compile Include="PropertyReflectionTests\PropertyReflectionManagerTests.cs" />
     <Compile Include="SingleEntityDataBaseOperations.cs" />
     <Compile Include="ParamterEquality.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
