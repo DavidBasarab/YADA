@@ -18,6 +18,7 @@ namespace YADA
         private IDictionary<Type, IEnumerable<PropertyInfo>> _entitiesProperties;
 
         private Reader _reader;
+        private PropertyReflectionManager _reflectionManager;
 
         public Database() {}
 
@@ -36,15 +37,24 @@ namespace YADA
             get { return _entitiesProperties ?? (_entitiesProperties = new ConcurrentDictionary<Type, IEnumerable<PropertyInfo>>()); }
         }
 
+        private PropertyReflectionManager ReflectionManager
+        {
+            get { return _reflectionManager ?? (_reflectionManager = new PropertyReflectionManager()); }
+        }
+
         public TEntity GetRecord<TEntity>(string commandText, IEnumerable<Parameter> parameters = null, Options options = Options.None) where TEntity : new()
         {
             TEntity newObject;
 
             using (var reader = Reader.RetrieveRecord(commandText, parameters, Options.SingleRow | options))
             {
+                IDictionary<string, int> columnsOrdinalRef = new Dictionary<string, int>();
+
                 reader.Read();
 
-                newObject = CreateFromReader<TEntity>(reader);
+                PopulateOrdinalReference(columnsOrdinalRef, reader);
+
+                newObject = CreateFromDataRecord<TEntity>(reader, columnsOrdinalRef);
 
                 reader.Close();
             }
@@ -58,12 +68,29 @@ namespace YADA
 
             using (var reader = Reader.RetrieveRecord(commandText, parameters, options))
             {
-                while (reader.Read()) records.Add(CreateFromReader<TEntity>(reader));
+                IDictionary<string, int> columnsOrdinalRef = new Dictionary<string, int>();
+
+                while (reader.Read())
+                {
+                    PopulateOrdinalReference(columnsOrdinalRef, reader);
+
+                    records.Add(CreateFromDataRecord<TEntity>(reader, columnsOrdinalRef));
+                }
 
                 reader.Close();
             }
 
             return records;
+        }
+
+        private static void PopulateOrdinalReference(IDictionary<string, int> columnsOrdinalRef, IDataReader reader)
+        {
+            if (columnsOrdinalRef.Count == 0)
+            {
+                var fieldCount = reader.FieldCount;
+
+                for (var i = 0; i < fieldCount; i++) columnsOrdinalRef.Add(reader.GetName(i), i);
+            }
         }
 
         public void InsertRow(string procedureName, IEnumerable<Parameter> parameters)
@@ -73,13 +100,7 @@ namespace YADA
             dataOperation.ExecuteNonQuery();
         }
 
-        private PropertyReflectionManager _reflectionManager;
-        private PropertyReflectionManager ReflectionManager
-        {
-            get { return _reflectionManager ?? (_reflectionManager = new PropertyReflectionManager()) ; }
-        }
-
-        private TEntity CreateFromReader<TEntity>(IDataRecord reader) where TEntity : new()
+        private TEntity CreateFromDataRecord<TEntity>(IDataRecord reader, IDictionary<string, int> columnsOrdinalRef) where TEntity : new()
         {
             var newObject = new TEntity();
 
@@ -87,14 +108,11 @@ namespace YADA
 
             foreach(var property in helper.Properties)
             {
-                var ordinalValue = reader.GetOrdinal(property.PropertyName);
-
+                var ordinalValue = columnsOrdinalRef[property.PropertyName];
+                
                 var value = reader[ordinalValue];
 
-                if (value is DBNull)
-                {
-                    value = null;
-                }
+                if (value is DBNull) value = null;
 
                 property.SetProperty(newObject, value);
             }
