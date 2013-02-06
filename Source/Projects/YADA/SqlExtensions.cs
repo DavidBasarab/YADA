@@ -28,7 +28,7 @@ namespace Yada
 
             foreach(var propertyMappingInfo in mappingInfo.Properties)
             {
-                var property = key.Type.GetProperty(propertyMappingInfo.PropertyInformation.Name);
+                var property = key.Type.GetProperty(propertyMappingInfo.MemberExpression.Member.Name);
 
                 command.Parameters.Add(new SqlParameter(propertyMappingInfo.Name, property.GetValue(value)));
             }

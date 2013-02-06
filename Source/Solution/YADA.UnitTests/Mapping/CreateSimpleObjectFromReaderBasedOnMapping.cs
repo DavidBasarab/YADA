@@ -1,6 +1,4 @@
-﻿using System.Data;
-using FluentAssertions;
-using Moq;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using Yada;
 
@@ -8,9 +6,8 @@ namespace YADA.UnitTests.Mapping
 {
     [TestFixture]
     [Category("YADA.UnitTests.Mapping")]
-    public class CreateSimpleObjectFromReaderBasedOnMapping
+    public class CreateSimpleObjectFromReaderBasedOnMapping : MappingTest
     {
-        private Mock<IDataReader> reader;
         private const string FIRST_NAME = "FIRST_NAME";
         private const string LAST_NAME = "LAST_NAME";
         private const string ID_NUMBER = "ID_NUMBER";
@@ -21,17 +18,6 @@ namespace YADA.UnitTests.Mapping
         private const string FIRST_NAME_VALUE = "Luke";
         private const string LAST_NAME_VALUE = "Skywalker";
         private const int ID_VALUE = 18979;
-
-        [SetUp]
-        public void SetUp()
-        {
-            Yada.Yada.Start();
-        }
-
-        private void CreateReader()
-        {
-            reader = new Mock<IDataReader>();
-        }
 
         private void SetUpFirstRead()
         {

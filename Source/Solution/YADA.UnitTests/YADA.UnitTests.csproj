@@ -50,7 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mapping\CreateSimpleObjectFromReaderBasedOnMapping.cs" />
+    <Compile Include="Mapping\MappingTest.cs" />
     <Compile Include="Mapping\MoqExtensions.cs" />
+    <Compile Include="Mapping\OneLevelMappingPropertyTests.cs" />
+    <Compile Include="Mapping\OneLevelObject.cs" />
     <Compile Include="Mapping\ReadExternalAssemblies.cs" />
     <Compile Include="Mapping\SimpleValueObject.cs" />
     <Compile Include="Mapping\SimpleValueObjectMapping.cs" />

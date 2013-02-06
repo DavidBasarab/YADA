@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Yada
@@ -32,12 +32,8 @@ namespace Yada
 
                 if (!OrdinalMap.ContainsKey(propertyInfo.Name)) continue;
 
-                SetRootProperty(propertyInfo, item);
-
-                //if (!propertyInfo.PropertyInformation.HasParent)
-                //    SetRootProperty(propertyInfo, item);
-                //else
-                //    SetChildProperty(propertyInfo, item);
+                if (propertyInfo.MemberExpression.Member.DeclaringType == type) SetRootProperty(propertyInfo, item);
+                else SetChildProperty(propertyInfo, item);
             }
 
             return item;
@@ -47,8 +43,6 @@ namespace Yada
         {
             var list = new List<T>();
 
-            var loopWatch = Stopwatch.StartNew();
-
             while (Reader.Read())
             {
                 var current = Create();
@@ -56,30 +50,26 @@ namespace Yada
                 list.Add(current);
             }
 
-            loopWatch.Stop();
-
             return list;
         }
 
-        //private void SetChildProperty(PropertyMappingInfo propertyInfo, T item)
-        //{
-        //    var parentProperty = type.GetProperty(propertyInfo.PropertyInformation.Parent.Name);
-        //    var parentType = parentProperty.PropertyType;
+        private void SetChildProperty(PropertyMappingInfo propertyInfo, T item)
+        {
+            var parentProperty = type.GetProperty(((MemberExpression)propertyInfo.MemberExpression.Expression).Member.Name);
+            var parentType = parentProperty.PropertyType;
 
-        //    var parentValue = parentProperty.GetValue(item, null);
+            var parentValue = parentProperty.GetValue(item, null);
 
-        //    var isParentNull = parentValue == null;
+            var isParentNull = parentValue == null;
 
-        //    if (isParentNull)
-        //        parentValue = Activator.CreateInstance(parentType);
+            if (isParentNull) parentValue = Activator.CreateInstance(parentType);
 
-        //    var childProperty = parentType.GetProperty(propertyInfo.PropertyInformation.Name);
+            var childProperty = parentType.GetProperty(propertyInfo.MemberExpression.Member.Name);
 
-        //    SetPropertyValue(propertyInfo, childProperty, parentValue);
+            SetPropertyValue(propertyInfo, childProperty, parentValue);
 
-        //    if (isParentNull)
-        //        parentProperty.SetValue(item, parentValue, null);
-        //}
+            if (isParentNull) parentProperty.SetValue(item, parentValue, null);
+        }
 
         private void SetPropertyValue(PropertyMappingInfo propertyInfo, PropertyInfo property, object item)
         {
@@ -113,7 +103,7 @@ namespace Yada
 
         private void SetRootProperty(PropertyMappingInfo propertyInfo, T item)
         {
-            var property = type.GetProperty(propertyInfo.PropertyInformation.Name);
+            var property = type.GetProperty(propertyInfo.MemberExpression.Member.Name);
 
             PropertyValueSetter<T>.SetPropertyValue(propertyInfo, property, item, Reader, OrdinalMap);
         }

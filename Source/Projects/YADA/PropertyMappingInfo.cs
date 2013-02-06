@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Reflection;
+using System.Linq.Expressions;
 
 namespace Yada
 {
     internal class PropertyMappingInfo
     {
-        public PropertyMappingInfo(MemberInfo memberInfo, string columnName)
+        public PropertyMappingInfo(MemberExpression memberInfo, string columnName)
         {
-            PropertyInformation = memberInfo;
+            MemberExpression = memberInfo;
             Name = columnName;
         }
 
-        public PropertyMappingInfo(MemberInfo memberInfo, Type otherMap)
+        public PropertyMappingInfo(MemberExpression memberInfo, Type otherMap)
             : this(memberInfo, string.Empty)
         {
             OtherMapType = otherMap;
@@ -19,6 +19,6 @@ namespace Yada
 
         public string Name { get; set; }
         public Type OtherMapType { get; set; }
-        public MemberInfo PropertyInformation { get; set; }
+        public MemberExpression MemberExpression { get; set; }
     }
 }
