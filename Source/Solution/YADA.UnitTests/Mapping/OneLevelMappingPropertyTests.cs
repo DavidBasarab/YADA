@@ -13,14 +13,24 @@ namespace YADA.UnitTests.Mapping
         private const string FIRST_NAME_VALUE = "Sam";
         private const string HOUSE_VALUE = "House of Representatives";
         private const int COMPOSITE_ID_VALUE = 965879;
+        private const int SECOND_PERSON_ID_VALUE = 15979;
+        private const int SECOND_COMPOSITE_ID_VALUE = 859849;
+        private const string SECOND_LAST_NAME_VALUE = "Wilson";
+        private const string SECOND_FIRST_NAME_VALUE = "Woodrow";
+        private const string SECOND_HOUSE_VALUE = "White House";
 
-        [Test]
-        public void WillMapAOneLevelPropertyObject()
+        [SetUp]
+        public new void SetUp()
         {
+            base.SetUp();
+
             CreateReader();
 
-            reader.Setup(v => v.Read()).Returns(true);
+            SetUpGetOrdinalValues();
+        }
 
+        private void SetUpGetOrdinalValues()
+        {
             reader.Setup(v => v.FieldCount).Returns(5);
 
             reader.Setup(v => v.GetName(0)).Returns("PersonId");
@@ -28,6 +38,12 @@ namespace YADA.UnitTests.Mapping
             reader.Setup(v => v.GetName(2)).Returns("LAST_NAME");
             reader.Setup(v => v.GetName(3)).Returns("FirstName");
             reader.Setup(v => v.GetName(4)).Returns("HouseName");
+        }
+
+        [Test]
+        public void WillMapAOneLevelPropertyObject()
+        {
+            reader.Setup(v => v.Read()).Returns(true);
 
             reader.Setup(v => v.GetValue(0)).Returns(PERSON_ID_VALUE);
             reader.Setup(v => v.GetValue(1)).Returns(COMPOSITE_ID_VALUE);
@@ -44,6 +60,35 @@ namespace YADA.UnitTests.Mapping
             result.SimpleValueObject.FirstName.Should().Be(FIRST_NAME_VALUE);
             result.SimpleValueObject.LastName.Should().Be(LAST_NAME_VALUE);
         }
-    }
 
+        [Test]
+        public void WillMapAOneLevelPropertyObjectList()
+        {
+            reader.Setup(v => v.Read()).ReturnsInOrder(true, true, false);
+
+            reader.Setup(v => v.GetValue(0)).ReturnsInOrder(SECOND_PERSON_ID_VALUE, PERSON_ID_VALUE);
+            reader.Setup(v => v.GetValue(1)).ReturnsInOrder(SECOND_COMPOSITE_ID_VALUE, COMPOSITE_ID_VALUE);
+            reader.Setup(v => v.GetValue(2)).ReturnsInOrder(SECOND_LAST_NAME_VALUE, LAST_NAME_VALUE);
+            reader.Setup(v => v.GetValue(3)).ReturnsInOrder(SECOND_FIRST_NAME_VALUE, FIRST_NAME_VALUE);
+            reader.Setup(v => v.GetValue(4)).ReturnsInOrder(SECOND_HOUSE_VALUE, HOUSE_VALUE);
+
+            var list = Creator<OneLevelObject>.CreateList(reader.Object);
+
+            list.Count.Should().Be(2);
+
+            // First Item
+            list[0].Id.Should().Be(SECOND_COMPOSITE_ID_VALUE);
+            list[0].Name.Should().Be(SECOND_HOUSE_VALUE);
+            list[0].SimpleValueObject.Id.Should().Be(SECOND_PERSON_ID_VALUE);
+            list[0].SimpleValueObject.FirstName.Should().Be(SECOND_FIRST_NAME_VALUE);
+            list[0].SimpleValueObject.LastName.Should().Be(SECOND_LAST_NAME_VALUE);
+
+            // Second Item
+            list[1].Id.Should().Be(COMPOSITE_ID_VALUE);
+            list[1].Name.Should().Be(HOUSE_VALUE);
+            list[1].SimpleValueObject.Id.Should().Be(PERSON_ID_VALUE);
+            list[1].SimpleValueObject.FirstName.Should().Be(FIRST_NAME_VALUE);
+            list[1].SimpleValueObject.LastName.Should().Be(LAST_NAME_VALUE);
+        }
+    }
 }
