@@ -49,14 +49,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mapping\CreateSimpleObjectFromReaderBasedOnMapping.cs" />
-    <Compile Include="Mapping\MappingTest.cs" />
-    <Compile Include="Mapping\MoqExtensions.cs" />
-    <Compile Include="Mapping\OneLevelMappingPropertyTests.cs" />
-    <Compile Include="Mapping\OneLevelObject.cs" />
+    <Compile Include="Mapping\Value\CreateSimpleObjectFromReaderBasedOnMapping.cs" />
+    <Compile Include="Mapping\Value\MappingTest.cs" />
+    <Compile Include="Mapping\Value\NLevelObjectMapping.cs" />
+    <Compile Include="MoqExtensions.cs" />
+    <Compile Include="Mapping\Value\OneLevelMappingPropertyTests.cs" />
+    <Compile Include="Mapping\Value\OneLevelObject.cs" />
     <Compile Include="Mapping\ReadExternalAssemblies.cs" />
-    <Compile Include="Mapping\SimpleValueObject.cs" />
-    <Compile Include="Mapping\SimpleValueObjectMapping.cs" />
+    <Compile Include="Mapping\Value\SimpleValueObject.cs" />
+    <Compile Include="Mapping\Value\SimpleValueObjectMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-namespace YADA.UnitTests.Mapping
+namespace YADA.UnitTests.Mapping.Value
 {
     internal class SimpleValueObject
     {

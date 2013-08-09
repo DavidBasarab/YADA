@@ -2,7 +2,7 @@ using System.Data;
 using Moq;
 using NUnit.Framework;
 
-namespace YADA.UnitTests.Mapping
+namespace YADA.UnitTests.Mapping.Value
 {
     public abstract class MappingTest
     {

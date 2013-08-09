@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Yada;
 
-namespace YADA.UnitTests.Mapping
+namespace YADA.UnitTests.Mapping.Value
 {
     [TestFixture]
     [Category("YADA.UnitTests.Mapping")]
