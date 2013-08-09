@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YADA", "..\Projects\YADA\YADA.csproj", "{B0C8221C-24A6-46A5-B34C-6E7F86C0288A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YADA.UnitTests", "YADA.UnitTests\YADA.UnitTests.csproj", "{05962606-A8EA-4657-80BE-B48C9FBEE290}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YADA.UnitTests", "..\Projects\YADA.UnitTests\YADA.UnitTests.csproj", "{05962606-A8EA-4657-80BE-B48C9FBEE290}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

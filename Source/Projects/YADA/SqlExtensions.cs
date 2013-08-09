@@ -24,7 +24,8 @@ namespace Yada
 
             var mappingInfo = Mapper.InputProcedureMappingInfo[key];
 
-            if (mappingInfo == null) throw new InvalidMapException(string.Format("Mapping missing for type {0}", typeof(T)));
+            if (mappingInfo == null)
+                throw new InvalidMapException(string.Format("Mapping missing for type {0}", typeof(T)));
 
             foreach(var propertyMappingInfo in mappingInfo.Properties)
             {

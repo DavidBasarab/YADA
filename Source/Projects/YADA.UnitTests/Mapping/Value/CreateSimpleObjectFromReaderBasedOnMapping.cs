@@ -19,22 +19,6 @@ namespace YADA.UnitTests.Mapping.Value
         private const string LAST_NAME_VALUE = "Skywalker";
         private const int ID_VALUE = 18979;
 
-        private void SetUpFirstRead()
-        {
-            reader.Setup(v => v.GetValue(FIRST_NAME_ORDINAL_VALUE)).Returns(FIRST_NAME_VALUE);
-            reader.Setup(v => v.GetValue(LAST_NAME_ORDINAL)).Returns(LAST_NAME_VALUE);
-            reader.Setup(v => v.GetValue(ID_NUMBER_ORDINAL)).Returns(ID_VALUE);
-        }
-
-        private void SetUpSimpleFields()
-        {
-            reader.Setup(v => v.FieldCount).Returns(FIELD_COUNT);
-
-            reader.Setup(v => v.GetName(FIRST_NAME_ORDINAL_VALUE)).Returns(FIRST_NAME);
-            reader.Setup(v => v.GetName(LAST_NAME_ORDINAL)).Returns(LAST_NAME);
-            reader.Setup(v => v.GetName(ID_NUMBER_ORDINAL)).Returns(ID_NUMBER);
-        }
-
         [Test]
         public void CreateASimpleObjectBasedOnMap()
         {
@@ -77,6 +61,22 @@ namespace YADA.UnitTests.Mapping.Value
             list[1].FirstName.Should().Be("Han");
             list[1].LastName.Should().Be("Solo");
             list[1].Id.Should().Be(2);
+        }
+
+        private void SetUpFirstRead()
+        {
+            reader.Setup(v => v.GetValue(FIRST_NAME_ORDINAL_VALUE)).Returns(FIRST_NAME_VALUE);
+            reader.Setup(v => v.GetValue(LAST_NAME_ORDINAL)).Returns(LAST_NAME_VALUE);
+            reader.Setup(v => v.GetValue(ID_NUMBER_ORDINAL)).Returns(ID_VALUE);
+        }
+
+        private void SetUpSimpleFields()
+        {
+            reader.Setup(v => v.FieldCount).Returns(FIELD_COUNT);
+
+            reader.Setup(v => v.GetName(FIRST_NAME_ORDINAL_VALUE)).Returns(FIRST_NAME);
+            reader.Setup(v => v.GetName(LAST_NAME_ORDINAL)).Returns(LAST_NAME);
+            reader.Setup(v => v.GetName(ID_NUMBER_ORDINAL)).Returns(ID_NUMBER);
         }
     }
 }

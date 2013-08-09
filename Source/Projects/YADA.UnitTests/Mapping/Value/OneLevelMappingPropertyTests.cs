@@ -29,17 +29,6 @@ namespace YADA.UnitTests.Mapping.Value
             SetUpGetOrdinalValues();
         }
 
-        private void SetUpGetOrdinalValues()
-        {
-            reader.Setup(v => v.FieldCount).Returns(5);
-
-            reader.Setup(v => v.GetName(0)).Returns("PersonId");
-            reader.Setup(v => v.GetName(1)).Returns("CompositeId");
-            reader.Setup(v => v.GetName(2)).Returns("LAST_NAME");
-            reader.Setup(v => v.GetName(3)).Returns("FirstName");
-            reader.Setup(v => v.GetName(4)).Returns("HouseName");
-        }
-
         [Test]
         public void WillMapAOneLevelPropertyObject()
         {
@@ -89,6 +78,17 @@ namespace YADA.UnitTests.Mapping.Value
             list[1].SimpleValueObject.Id.Should().Be(PERSON_ID_VALUE);
             list[1].SimpleValueObject.FirstName.Should().Be(FIRST_NAME_VALUE);
             list[1].SimpleValueObject.LastName.Should().Be(LAST_NAME_VALUE);
+        }
+
+        private void SetUpGetOrdinalValues()
+        {
+            reader.Setup(v => v.FieldCount).Returns(5);
+
+            reader.Setup(v => v.GetName(0)).Returns("PersonId");
+            reader.Setup(v => v.GetName(1)).Returns("CompositeId");
+            reader.Setup(v => v.GetName(2)).Returns("LAST_NAME");
+            reader.Setup(v => v.GetName(3)).Returns("FirstName");
+            reader.Setup(v => v.GetName(4)).Returns("HouseName");
         }
     }
 }

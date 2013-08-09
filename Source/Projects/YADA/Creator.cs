@@ -30,10 +30,13 @@ namespace Yada
             {
                 var propertyInfo = mappingInfo.Properties[i];
 
-                if (!OrdinalMap.ContainsKey(propertyInfo.Name)) continue;
+                if (!OrdinalMap.ContainsKey(propertyInfo.Name))
+                    continue;
 
-                if (propertyInfo.MemberExpression.Member.DeclaringType == type) SetRootProperty(propertyInfo, item);
-                else SetChildProperty(propertyInfo, item);
+                if (propertyInfo.MemberExpression.Member.DeclaringType == type)
+                    SetRootProperty(propertyInfo, item);
+                else
+                    SetChildProperty(propertyInfo, item);
             }
 
             return item;
@@ -62,13 +65,15 @@ namespace Yada
 
             var isParentNull = parentValue == null;
 
-            if (isParentNull) parentValue = Activator.CreateInstance(parentType);
+            if (isParentNull)
+                parentValue = Activator.CreateInstance(parentType);
 
             var childProperty = parentType.GetProperty(propertyInfo.MemberExpression.Member.Name);
 
             SetPropertyValue(propertyInfo, childProperty, parentValue);
 
-            if (isParentNull) parentProperty.SetValue(item, parentValue, null);
+            if (isParentNull)
+                parentProperty.SetValue(item, parentValue, null);
         }
 
         private void SetPropertyValue(PropertyMappingInfo propertyInfo, PropertyInfo property, object item)
@@ -77,7 +82,8 @@ namespace Yada
 
             var readerValue = Reader.GetValue(ordinalValue);
 
-            if (readerValue == DBNull.Value) return;
+            if (readerValue == DBNull.Value)
+                return;
 
             var dbType = Reader.GetFieldType(ordinalValue);
             var clrType = property.PropertyType;
@@ -85,15 +91,21 @@ namespace Yada
 
             try
             {
-                if (clrType.BaseType == typeof(Enum) || (nullableType != null && nullableType.BaseType == typeof(Enum))) property.SetValue(item, Convert.ChangeType(readerValue, typeof(int)), null);
-                else if (clrType == typeof(bool) && dbType == typeof(string)) property.SetValue(item, readerValue.ToString() == "Y", null);
-                else if (clrType.IsAssignableFrom(dbType)) property.SetValue(item, readerValue, null);
+                if (clrType.BaseType == typeof(Enum) || (nullableType != null && nullableType.BaseType == typeof(Enum)))
+                    property.SetValue(item, Convert.ChangeType(readerValue, typeof(int)), null);
+                else if (clrType == typeof(bool) && dbType == typeof(string))
+                    property.SetValue(item, readerValue.ToString() == "Y", null);
+                else if (clrType.IsAssignableFrom(dbType))
+                    property.SetValue(item, readerValue, null);
                 else if (nullableType != null)
                 {
-                    if (clrType == typeof(bool?) && dbType == typeof(string)) property.SetValue(item, readerValue.ToString() == "Y", null);
-                    else property.SetValue(item, Convert.ChangeType(readerValue, nullableType), null);
+                    if (clrType == typeof(bool?) && dbType == typeof(string))
+                        property.SetValue(item, readerValue.ToString() == "Y", null);
+                    else
+                        property.SetValue(item, Convert.ChangeType(readerValue, nullableType), null);
                 }
-                else property.SetValue(item, Convert.ChangeType(readerValue, clrType), null);
+                else
+                    property.SetValue(item, Convert.ChangeType(readerValue, clrType), null);
             }
             catch (FormatException ex)
             {

@@ -6,14 +6,16 @@ namespace Yada
     {
         public static bool operator ==(ProcedureMap rhs, ProcedureMap lhs)
         {
-            if (ReferenceEquals(rhs, null) || ReferenceEquals(lhs, null)) return ReferenceEquals(rhs, null) && ReferenceEquals(lhs, null);
+            if (ReferenceEquals(rhs, null) || ReferenceEquals(lhs, null))
+                return ReferenceEquals(rhs, null) && ReferenceEquals(lhs, null);
 
             return rhs.Equals(lhs);
         }
 
         public static bool operator !=(ProcedureMap rhs, ProcedureMap lhs)
         {
-            if (ReferenceEquals(rhs, null) || ReferenceEquals(lhs, null)) return !ReferenceEquals(rhs, null) || !ReferenceEquals(lhs, null);
+            if (ReferenceEquals(rhs, null) || ReferenceEquals(lhs, null))
+                return !ReferenceEquals(rhs, null) || !ReferenceEquals(lhs, null);
 
             return !rhs.Equals(lhs);
         }

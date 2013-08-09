@@ -33,7 +33,8 @@ namespace Yada
         {
             OrdinalMap = new ConcurrentDictionary<string, int>();
 
-            for (var i = 0; i < Reader.FieldCount; i++) OrdinalMap.Add(Reader.GetName(i), i);
+            for (var i = 0; i < Reader.FieldCount; i++)
+                OrdinalMap.Add(Reader.GetName(i), i);
         }
     }
 }

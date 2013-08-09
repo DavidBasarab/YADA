@@ -54,11 +54,16 @@ namespace Yada
 
         private void AttemptSetValue()
         {
-            if (IsEnum) SetEnum();
-            else if (IsStringToBool) ConvertStringToBool();
-            else if (IsAssignableFromDbType) SetAssignableValue();
-            else if (IsNullableType) SetNullableType();
-            else BasicSetValue();
+            if (IsEnum)
+                SetEnum();
+            else if (IsStringToBool)
+                ConvertStringToBool();
+            else if (IsAssignableFromDbType)
+                SetAssignableValue();
+            else if (IsNullableType)
+                SetNullableType();
+            else
+                BasicSetValue();
         }
 
         private void BasicSetValue()
@@ -69,6 +74,13 @@ namespace Yada
         private void ConvertStringToBool()
         {
             PropertyInfo.SetValue(Value, readerValue.ToString() == "Y", null);
+        }
+
+        private void GetTypes()
+        {
+            dbType = Reader.GetFieldType(ordinalValue);
+            clrType = PropertyInfo.PropertyType;
+            nullableType = Nullable.GetUnderlyingType(clrType);
         }
 
         private void SetAssignableValue()
@@ -83,8 +95,10 @@ namespace Yada
 
         private void SetNullableType()
         {
-            if (clrType == typeof(bool?) && dbType == typeof(string)) PropertyInfo.SetValue(Value, readerValue.ToString() == "Y", null);
-            else PropertyInfo.SetValue(Value, Convert.ChangeType(readerValue, nullableType), null);
+            if (clrType == typeof(bool?) && dbType == typeof(string))
+                PropertyInfo.SetValue(Value, readerValue.ToString() == "Y", null);
+            else
+                PropertyInfo.SetValue(Value, Convert.ChangeType(readerValue, nullableType), null);
         }
 
         private void SetValue()
@@ -93,7 +107,8 @@ namespace Yada
 
             readerValue = Reader.GetValue(ordinalValue);
 
-            if (readerValue == DBNull.Value) return;
+            if (readerValue == DBNull.Value)
+                return;
 
             GetTypes();
 
@@ -105,13 +120,6 @@ namespace Yada
             {
                 throw new FormatException(string.Format("Error mapping field {0} to value {1}", PropertyMappingInfo.Name, readerValue), ex);
             }
-        }
-
-        private void GetTypes()
-        {
-            dbType = Reader.GetFieldType(ordinalValue);
-            clrType = PropertyInfo.PropertyType;
-            nullableType = Nullable.GetUnderlyingType(clrType);
         }
     }
 }

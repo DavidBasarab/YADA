@@ -14,7 +14,8 @@ namespace Yada
 
         public MappingExpression<T> Map(Expression<Func<T, object>> destinationProperty, string name)
         {
-            if (MappingInfo.MultiResultSet) throw new NotSupportedException("Cannot mix Map with typeOf(OtherMap) and basic structs maps.  All multi result sets should be user types only.");
+            if (MappingInfo.MultiResultSet)
+                throw new NotSupportedException("Cannot mix Map with typeOf(OtherMap) and basic structs maps.  All multi result sets should be user types only.");
 
             var memberInfo = GetDestinationpProperty(destinationProperty);
 

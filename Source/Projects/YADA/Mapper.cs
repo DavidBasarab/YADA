@@ -29,36 +29,45 @@ namespace Yada
             return mappingInfo.GetMappingExpression<T>();
         }
 
-        internal static void Reset()
-        {
-            DatabaseOutputMappingInfo = new Dictionary<Type, MappingInfo>();
-            InputProcedureMappingInfo = new Dictionary<ProcedureMap, MappingInfo>();
-        }
-
         internal static bool DoesColumnExist(IDataRecord reader, string columnName)
         {
-            for (var i = 0; i < reader.FieldCount; i++) if (reader.GetName(i) == columnName) return true;
+            for (var i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetName(i) == columnName)
+                    return true;
+            }
 
             return false;
         }
 
         internal static void MapObjects()
         {
-            foreach(var assembly in AppDomain.CurrentDomain.GetAssemblies()) RunMaps(assembly);
+            foreach(var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                RunMaps(assembly);
+        }
+
+        internal static void Reset()
+        {
+            DatabaseOutputMappingInfo = new Dictionary<Type, MappingInfo>();
+            InputProcedureMappingInfo = new Dictionary<ProcedureMap, MappingInfo>();
         }
 
         private static void Add(this IDictionary<Type, MappingInfo> collection, MappingInfo mappingInfo)
         {
-            if (collection.ContainsKey(mappingInfo.DomainType)) collection[mappingInfo.DomainType] = mappingInfo;
-            else collection.Add(mappingInfo.DomainType, mappingInfo);
+            if (collection.ContainsKey(mappingInfo.DomainType))
+                collection[mappingInfo.DomainType] = mappingInfo;
+            else
+                collection.Add(mappingInfo.DomainType, mappingInfo);
         }
 
         private static void Add(this IDictionary<ProcedureMap, MappingInfo> collection, MappingInfo mappingInfo)
         {
             var key = new ProcedureMap(mappingInfo.ProcedureName, mappingInfo.DomainType);
 
-            if (collection.ContainsKey(key)) collection[key] = mappingInfo;
-            else collection.Add(key, mappingInfo);
+            if (collection.ContainsKey(key))
+                collection[key] = mappingInfo;
+            else
+                collection.Add(key, mappingInfo);
         }
 
 
